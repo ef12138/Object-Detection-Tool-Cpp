@@ -13,7 +13,6 @@
 #include <QScrollArea>
 #include <QFrame>
 #include <QFontMetrics>
-#include <QUrl>
 #include <QLineEdit>
 #include <QRadioButton>
 #include <QButtonGroup>
@@ -573,19 +572,26 @@ QString projectUrl() {
     return QStringLiteral("https://ef12138.github.io/Object-Detection-Tool-Cpp/");
 }
 
+// 官网在关于页里显示的名字：用产品名，而不是一串域名
+QString aboutSiteName() {
+    return QStringLiteral("Object Detection Tool");
+}
+
 // 链接文字：QSS 的 color 管不到富文本里的 <a>（锚点走的是 QPalette::Link），
 // 所以颜色必须写进 HTML，换主题时重新拼一遍。
-// 显示文字去掉了 scheme：仓库类地址只留 owner/repo，其它站点只留 host，
+// 显示文字去掉了 scheme：官网用产品名，仓库类地址只留 owner/repo，
 // 因为卡片里能用的宽度约 200px，整条 https 地址会顶出卡片右边（实测会被裁掉结尾）。
 QString aboutLinkHtml(const QString& url, const QColor& color) {
-    const QUrl parsed(url);
     QString shown;
-    if (!parsed.host().isEmpty() && !parsed.host().endsWith(QStringLiteral("github.com"))) {
-        // 官网：github.io 这类站点的路径又长又和仓库同名，只显示域名更清楚
-        shown = parsed.host();
+    auto trimSlash = [](QString s) {
+        while (s.endsWith(QLatin1Char('/'))) s.chop(1);
+        return s;
+    };
+    if (trimSlash(url) == trimSlash(projectUrl())) {
+        // 官网：域名 + 仓库同名路径放在卡片里既长又容易和仓库混淆，直接写产品名
+        shown = aboutSiteName();
     } else {
-        shown = url;
-        while (shown.endsWith(QLatin1Char('/'))) shown.chop(1);
+        shown = trimSlash(url);
         const int slash = shown.lastIndexOf(QLatin1Char('/'));
         if (slash >= 0) shown = shown.mid(slash + 1);
     }
