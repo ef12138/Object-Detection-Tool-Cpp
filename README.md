@@ -11,8 +11,9 @@
 - **实测环境**：Intel i5-12400F ／ NVIDIA RTX 3060 ／ 16 GB DDR4 ／ Windows 11 26200 ／ 1920×1080
 - **规模**：C++ 源码约 3200 行，产物是一个 exe + 若干 DLL
 - **软件体积**：exe 约 550 KB；运行库（exe + Qt6 + ONNX Runtime + DirectML）约 58 MB；安装包与仓库都不带模型，四个尺寸的模型加 QQ 群 **207341814** 获取
-- **开源地址**：https://github.com/ef12138/Object-Detection-Tool-Cpp
-- **安装包**：https://pan.xunlei.com/s/VP5A0JmwlXn1FLglZPqF5_ZOA1?pwd=jdvw （提取码 `jdvw`）
+- **官网**：<https://ef12138.github.io/Object-Detection-Tool-Cpp/>
+- **开源地址**：<https://github.com/ef12138/Object-Detection-Tool-Cpp>
+- **安装包**：<https://pan.xunlei.com/s/VP5A0JmwlXn1FLglZPqF5_ZOA1?pwd=jdvw> （提取码 `jdvw`）
 - **版本**：2.2
 
 ## 整体架构
@@ -44,11 +45,11 @@
 
 ### 六个功能页
 
-| 推理 | PID |
-| :---: | :---: |
-| ![推理](docs/images/03-inference.png) | ![PID](docs/images/04-pid.png) |
-| **贝塞尔曲线**<br>![贝塞尔曲线](docs/images/05-bezier.png) | **瞄准位置**<br>![瞄准位置](docs/images/06-aim.png) |
-| **快捷键**<br>![快捷键](docs/images/07-hotkey.png) | **关于**<br>![关于](docs/images/08-about.png) |
+|                         推理                        |                      PID                     |
+| :-----------------------------------------------: | :------------------------------------------: |
+|                         推理                        |                      PID                     |
+| **贝塞尔曲线**<br />[贝塞尔曲线](docs/images/05-bezier.png) | **瞄准位置**<br />[瞄准位置](docs/images/06-aim.png) |
+|   **快捷键**<br />[快捷键](docs/images/07-hotkey.png)   |  **关于**<br />[关于](docs/images/08-about.png)  |
 
 几个设计上的取舍：
 
@@ -71,12 +72,12 @@
 
 本机（i5-12400F / RTX 3060 / DirectML）实测，抓屏 640×640，频率设为 0（跑满为止），每档取 600~1400 帧的中位数：
 
-| 输入尺寸 | 单帧推理     | 整条循环帧率    |
-| ---- | -------- | --------- |
-| 256  | 1.33 ms  | 约 276 fps |
-| 320  | 2.08 ms  | 约 236 fps |
-| 416  | 2.86 ms  | 约 210 fps |
-| 640  | 5.43 ms  | 约 202 fps |
+| 输入尺寸 | 单帧推理    | 整条循环帧率    |
+| ---- | ------- | --------- |
+| 256  | 1.33 ms | 约 276 fps |
+| 320  | 2.08 ms | 约 236 fps |
+| 416  | 2.86 ms | 约 210 fps |
+| 640  | 5.43 ms | 约 202 fps |
 
 抓屏本身不到 1 ms。640 的推理耗时约是 256 的 4.1 倍——像素量差 6 倍，但固定开销（抓屏、显存往返、后处理）摊薄了差距。要快选 256，要准选 640。
 
@@ -186,7 +187,3 @@ C++ 源码约 3200 行。
 本软件仅供计算机视觉技术的个人学习与研究使用，请勿用于线上对战、商业代练等违反平台用户协议或法律法规的场景。因使用本软件产生的一切后果由使用者自行承担，作者不承担任何直接或间接责任。
 
 控制功能是"按住热键才生效"的手动触发设计，松开立即停止；检测本身不会移动鼠标。
-
----
-
-作者：**EF**　｜　[github.com/ef12138/Object-Detection-Tool-Cpp](https://github.com/ef12138/Object-Detection-Tool-Cpp)
