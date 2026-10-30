@@ -87,15 +87,40 @@ h1{margin:0;font-size:clamp(32px,5vw,56px);line-height:1.1;letter-spacing:-.028e
 .lead p{margin:13px 0;font-size:16px;line-height:1.9;color:var(--muted)}
 .lead strong{color:var(--text);font-weight:600}
 .cta{display:flex;flex-wrap:wrap;gap:12px;margin:32px 0 0}
-.cta a{display:inline-flex;align-items:center;gap:9px;padding:14px 24px;border-radius:11px;
+.cta a,.cta button{display:inline-flex;align-items:center;gap:9px;padding:14px 24px;border-radius:11px;
   font-size:14.5px;font-weight:600;text-decoration:none;line-height:1;
+  font-family:inherit;cursor:pointer;
   transition:transform .16s,box-shadow .16s,background .16s,border-color .16s}
-.cta .main{background:var(--accent);color:#fff;box-shadow:0 8px 26px -12px var(--glow)}
+.cta .main{background:var(--accent);color:#fff;border:1px solid transparent;box-shadow:0 8px 26px -12px var(--glow)}
 .cta .main:hover{background:var(--accent-2);transform:translateY(-1px);box-shadow:0 14px 34px -14px var(--glow)}
 .cta .ghost{color:var(--text);border:1px solid var(--line);background:var(--panel)}
 .cta .ghost:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-1px)}
 .hint{margin:14px 0 0;font-size:12.5px;color:var(--dim)}
 .hint code{background:var(--panel-2);border:1px solid var(--line);color:var(--accent-2);padding:1px 6px;border-radius:5px;font-size:12px}
+.mask{position:fixed;inset:0;z-index:90;display:none;place-items:center;padding:20px;
+  background:rgba(3,5,9,.62);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.mask.on{display:grid}
+.sheet{width:min(432px,100%);background:var(--panel);border:1px solid var(--line);border-radius:16px;
+  padding:26px 26px 22px;box-shadow:0 34px 80px -34px rgba(0,0,0,.8);animation:pop .22s ease-out}
+@keyframes pop{from{opacity:0;transform:translateY(12px) scale(.985)}to{opacity:1;transform:none}}
+.sheet h4{margin:0;font-size:18px;font-weight:700;letter-spacing:-.01em}
+.sheet p{margin:10px 0 0;font-size:13.5px;line-height:1.78;color:var(--muted)}
+.sheet p code{background:var(--panel-2);border:1px solid var(--line);color:var(--accent-2);
+  padding:1px 6px;border-radius:5px;font-size:12.5px}
+.qnum{display:flex;align-items:center;justify-content:space-between;gap:14px;margin:18px 0 0;
+  padding:13px 17px;border-radius:11px;border:1px dashed var(--line);background:var(--panel-2)}
+.qnum span{font-size:12.5px;color:var(--dim)}
+.qnum b{font-size:21px;font-weight:800;letter-spacing:.05em;font-variant-numeric:tabular-nums;color:var(--text)}
+.qact{display:flex;gap:10px;margin:20px 0 0}
+.qact button{flex:1;display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  padding:12px 16px;border-radius:10px;font-size:14px;font-weight:600;line-height:1;
+  font-family:inherit;cursor:pointer;border:1px solid transparent;
+  transition:background .16s,border-color .16s,color .16s}
+.qact .ok{background:var(--accent);color:#fff}
+.qact .ok:hover{background:var(--accent-2)}
+.qact .ok.done{background:var(--green);color:#06281c}
+.qact .no{background:transparent;border-color:var(--line);color:var(--muted)}
+.qact .no:hover{border-color:var(--accent);color:var(--accent)}
 .stats{display:flex;flex-wrap:wrap;gap:40px;margin:46px 0 0;padding-top:26px;border-top:1px solid var(--line)}
 .stat b{display:block;font-size:26px;font-weight:800;letter-spacing:-.02em;line-height:1.2;
   font-variant-numeric:tabular-nums}
@@ -381,6 +406,10 @@ html[data-theme="light"] .pid2 .gnd,html[data-theme="light"] .pid2 .vax,html[dat
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 11l5 5 5-5"/><path d="M4 20h16"/></svg>
         下载安装包
       </a>
+      <button class="ghost" id="getModel" type="button">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8.5 12 3.5 3 8.5v7l9 5 9-5z"/><path d="M3 8.5l9 5 9-5"/><path d="M12 13.5v7"/></svg>
+        模型获取
+      </button>
       <a class="ghost" href="https://github.com/ef12138/Object-Detection-Tool-Cpp" target="_blank" rel="noopener">
         <svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.4 7.4 0 0 1 2-.27c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
         GitHub 源码
@@ -587,6 +616,21 @@ html[data-theme="light"] .pid2 .gnd,html[data-theme="light"] .pid2 .vax,html[dat
   <p class="l">本软件仅供计算机视觉技术的个人学习与研究使用，请勿用于违反平台用户协议或法律法规的场景。</p>
 </footer>
 
+<div class="mask" id="modelMask" aria-hidden="true">
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="modelTitle">
+    <h4 id="modelTitle">模型获取</h4>
+    <p>安装包和仓库都不带模型。256 / 320 / 416 / 640 四个尺寸的 <code>.onnx</code> 加群免费拿，下好放进程序同级的 <code>models\</code> 目录即可，默认读 <code>./models/lqm640.onnx</code>。</p>
+    <div class="qnum"><span>QQ 群</span><b>207341814</b></div>
+    <div class="qact">
+      <button class="ok" id="copyQ" type="button">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        <span>复制群号</span>
+      </button>
+      <button class="no" id="closeModel" type="button">关闭</button>
+    </div>
+  </div>
+</div>
+
 <script>
 (function(){
   var root = document.documentElement;
@@ -598,6 +642,80 @@ html[data-theme="light"] .pid2 .gnd,html[data-theme="light"] .pid2 .vax,html[dat
   btn.addEventListener('click', function(){
     root.dataset.theme = root.dataset.theme === 'dark' ? 'light' : 'dark';
     try { localStorage.setItem('odt-theme', root.dataset.theme); } catch(e){}
+  });
+})();
+</script>
+<script>
+(function(){
+  var mask = document.getElementById('modelMask');
+  var open = document.getElementById('getModel');
+  var close = document.getElementById('closeModel');
+  var copy = document.getElementById('copyQ');
+  var label = copy.querySelector('span');
+  var NUM = '207341814';
+  if (!mask || !open) return;
+
+  function show(){
+    mask.classList.add('on');
+    mask.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    copy.focus();
+  }
+  function hide(){
+    mask.classList.remove('on');
+    mask.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    open.focus();
+  }
+  function fallback(){
+    var t = document.createElement('textarea');
+    t.value = NUM;
+    t.setAttribute('readonly', '');
+    t.style.cssText = 'position:fixed;top:-9999px;opacity:0';
+    document.body.appendChild(t);
+    t.select();
+    var ok = false;
+    try { ok = document.execCommand('copy'); } catch(e){}
+    document.body.removeChild(t);
+    return ok;
+  }
+  function done(){
+    copy.classList.add('done');
+    label.textContent = '已复制';
+    setTimeout(reset, 1600);
+  }
+  function reset(){
+    copy.classList.remove('done');
+    label.textContent = '复制群号';
+  }
+  function selectNum(){
+    var b = document.querySelector('.qnum b');
+    var r = document.createRange();
+    r.selectNodeContents(b);
+    var s = window.getSelection();
+    s.removeAllRanges();
+    s.addRange(r);
+    copy.classList.add('done');
+    label.textContent = '按 Ctrl+C';
+    setTimeout(reset, 2600);
+  }
+
+  open.addEventListener('click', show);
+  close.addEventListener('click', hide);
+  mask.addEventListener('click', function(e){ if (e.target === mask) hide(); });
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape' && mask.classList.contains('on')) hide();
+  });
+  copy.addEventListener('click', function(){
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(NUM).then(done, function(){
+        if (fallback()) { done(); } else { selectNum(); }
+      });
+    } else if (fallback()) {
+      done();
+    } else {
+      selectNum();
+    }
   });
 })();
 </script>
