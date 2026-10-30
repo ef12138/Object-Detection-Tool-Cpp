@@ -1,0 +1,13 @@
+<RCC>
+    <!-- 运行时窗口图标用多尺寸 PNG：PNG 是 Qt 内置格式，
+         不依赖 qico 插件（部署目录里只有 qwindows.dll，读 .ico 会静默失败）。
+         exe 文件图标仍由 app.rc 引用根目录的 logo.ico。 -->
+    <qresource prefix="/logo">
+        <file alias="16.png">assets/logo_16.png</file>
+        <file alias="24.png">assets/logo_24.png</file>
+        <file alias="32.png">assets/logo_32.png</file>
+        <file alias="48.png">assets/logo_48.png</file>
+        <file alias="64.png">assets/logo_64.png</file>
+        <file alias="128.png">assets/logo_128.png</file>
+    </qresource>
+</RCC>

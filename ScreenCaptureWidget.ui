@@ -1,0 +1,591 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+    <class>ScreenCaptureWidget</class>
+    <widget class="QWidget" name="ScreenCaptureWidget">
+        <property name="geometry">
+            <rect>
+                <x>0</x>
+                <y>0</y>
+                <width>320</width>
+                <height>350</height>
+            </rect>
+        </property>
+        <property name="windowTitle">
+            <string>Object Detection Tool</string>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout">
+            <property name="spacing">
+                <number>6</number>
+            </property>
+            <property name="leftMargin">
+                <number>9</number>
+            </property>
+            <property name="topMargin">
+                <number>9</number>
+            </property>
+            <property name="rightMargin">
+                <number>9</number>
+            </property>
+            <property name="bottomMargin">
+                <number>9</number>
+            </property>
+            <item>
+                <widget class="QGroupBox" name="groupBox_inference">
+                    <property name="title">
+                        <string>推理</string>
+                    </property>
+                    <layout class="QVBoxLayout" name="verticalLayout_inference">
+                        <item>
+                            <layout class="QHBoxLayout" name="horizontalLayout_confidence">
+                                <item>
+                                    <widget class="QLabel" name="label_confidence">
+                                        <property name="text">
+                                            <string>置信度:</string>
+                                        </property>
+                                    </widget>
+                                </item>
+                                <item>
+                                    <widget class="QSlider" name="slider_confidence">
+                                        <property name="minimum">
+                                            <number>0</number>
+                                        </property>
+                                        <property name="maximum">
+                                            <number>100</number>
+                                        </property>
+                                        <property name="value">
+                                            <number>70</number>
+                                        </property>
+                                        <property name="orientation">
+                                            <enum>Qt::Horizontal</enum>
+                                        </property>
+                                    </widget>
+                                </item>
+                                <item>
+                                    <widget class="QLineEdit" name="label_confidence_value">
+                                        <property name="text">
+                                            <string>0.70</string>
+                                        </property>
+                                    </widget>
+                                </item>
+                            </layout>
+                        </item>
+                        <item>
+                            <layout class="QHBoxLayout" name="horizontalLayout_frequency">
+                                <item>
+                                    <widget class="QLabel" name="label_frequency">
+                                        <property name="text">
+                                            <string>频率(ms):</string>
+                                        </property>
+                                    </widget>
+                                </item>
+                                <item>
+                                    <widget class="QSlider" name="slider_frequency">
+                                        <property name="minimum">
+                                            <number>0</number>
+                                        </property>
+                                        <property name="maximum">
+                                            <number>20</number>
+                                        </property>
+                                        <property name="value">
+                                            <number>0</number>
+                                        </property>
+                                        <property name="orientation">
+                                            <enum>Qt::Horizontal</enum>
+                                        </property>
+                                    </widget>
+                                </item>
+                                <item>
+                                    <widget class="QLineEdit" name="label_frequency_value">
+                                        <property name="text">
+                                            <string>0</string>
+                                        </property>
+                                    </widget>
+                                </item>
+                            </layout>
+                        </item>
+                        <item>
+                            <layout class="QHBoxLayout" name="horizontalLayout_nms">
+                                <item>
+                                    <widget class="QLabel" name="label_nms">
+                                        <property name="text">
+                                            <string>NMS阈值:</string>
+                                        </property>
+                                    </widget>
+                                </item>
+                                <item>
+                                    <widget class="QSlider" name="slider_nms">
+                                        <property name="minimum">
+                                            <number>0</number>
+                                        </property>
+                                        <property name="maximum">
+                                            <number>100</number>
+                                        </property>
+                                        <property name="value">
+                                            <number>45</number>
+                                        </property>
+                                        <property name="orientation">
+                                            <enum>Qt::Horizontal</enum>
+                                        </property>
+                                    </widget>
+                                </item>
+                                <item>
+                                    <widget class="QLineEdit" name="label_nms_value">
+                                        <property name="text">
+                                            <string>0.45</string>
+                                        </property>
+                                    </widget>
+                                </item>
+                            </layout>
+                        </item>
+                    </layout>
+                </widget>
+            </item>
+            <item>
+                <widget class="QGroupBox" name="groupBox_pid">
+                    <property name="title">
+                        <string>PID</string>
+                    </property>
+                    <layout class="QVBoxLayout" name="verticalLayout_pid">
+                        <item>
+                            <layout class="QHBoxLayout" name="horizontalLayout_kp">
+                                <item>
+                                    <widget class="QLabel" name="label_kp">
+                                        <property name="text">
+                                            <string>KP:</string>
+                                        </property>
+                                    </widget>
+                                </item>
+                                <item>
+                                    <widget class="QSlider" name="slider_kp">
+                                        <property name="minimum">
+                                            <number>0</number>
+                                        </property>
+                                        <property name="maximum">
+                                            <number>100</number>
+                                        </property>
+                                        <property name="value">
+                                            <number>100</number>
+                                        </property>
+                                        <property name="orientation">
+                                            <enum>Qt::Horizontal</enum>
+                                        </property>
+                                    </widget>
+                                </item>
+                                <item>
+                                    <widget class="QLineEdit" name="label_kp_value">
+                                        <property name="text">
+                                            <string>1.00</string>
+                                        </property>
+                                    </widget>
+                                </item>
+                            </layout>
+                        </item>
+                        <item>
+                            <layout class="QHBoxLayout" name="horizontalLayout_ki">
+                                <item>
+                                    <widget class="QLabel" name="label_ki">
+                                        <property name="text">
+                                            <string>KI:</string>
+                                        </property>
+                                    </widget>
+                                </item>
+                                <item>
+                                    <widget class="QSlider" name="slider_ki">
+                                        <property name="minimum">
+                                            <number>0</number>
+                                        </property>
+                                        <property name="maximum">
+                                            <number>100</number>
+                                        </property>
+                                        <property name="value">
+                                            <number>10</number>
+                                        </property>
+                                        <property name="orientation">
+                                            <enum>Qt::Horizontal</enum>
+                                        </property>
+                                    </widget>
+                                </item>
+                                <item>
+                                    <widget class="QLineEdit" name="label_ki_value">
+                                        <property name="text">
+                                            <string>0.10</string>
+                                        </property>
+                                    </widget>
+                                </item>
+                            </layout>
+                        </item>
+                        <item>
+                            <layout class="QHBoxLayout" name="horizontalLayout_kd">
+                                <item>
+                                    <widget class="QLabel" name="label_kd">
+                                        <property name="text">
+                                            <string>KD:</string>
+                                        </property>
+                                    </widget>
+                                </item>
+                                <item>
+                                    <widget class="QSlider" name="slider_kd">
+                                        <property name="minimum">
+                                            <number>0</number>
+                                        </property>
+                                        <property name="maximum">
+                                            <number>100</number>
+                                        </property>
+                                        <property name="value">
+                                            <number>5</number>
+                                        </property>
+                                        <property name="orientation">
+                                            <enum>Qt::Horizontal</enum>
+                                        </property>
+                                    </widget>
+                                </item>
+                                <item>
+                                    <widget class="QLineEdit" name="label_kd_value">
+                                        <property name="text">
+                                            <string>0.050</string>
+                                        </property>
+                                    </widget>
+                                </item>
+                            </layout>
+                        </item>
+                        <item>
+                            <layout class="QHBoxLayout" name="horizontalLayout_range">
+                                <item>
+                                    <widget class="QLabel" name="label_range">
+                                        <property name="text">
+                                            <string>范围:</string>
+                                        </property>
+                                    </widget>
+                                </item>
+                                <item>
+                                    <widget class="QSlider" name="slider_range">
+                                        <property name="minimum">
+                                            <number>1</number>
+                                        </property>
+                                        <property name="maximum">
+                                            <number>1000</number>
+                                        </property>
+                                        <property name="value">
+                                            <number>15</number>
+                                        </property>
+                                        <property name="orientation">
+                                            <enum>Qt::Horizontal</enum>
+                                        </property>
+                                    </widget>
+                                </item>
+                                <item>
+                                    <widget class="QLineEdit" name="label_range_value">
+                                        <property name="text">
+                                            <string>15</string>
+                                        </property>
+                                    </widget>
+                                </item>
+                            </layout>
+                        </item>
+                    </layout>
+                </widget>
+            </item>
+            <item>
+                <widget class="QGroupBox" name="groupBox_bezier">
+                    <property name="title">
+                        <string>贝塞尔曲线</string>
+                    </property>
+                    <layout class="QVBoxLayout" name="verticalLayout_bezier">
+                        <item>
+                            <layout class="QHBoxLayout" name="horizontalLayout_bezier_random">
+                                <item>
+                                    <widget class="QLabel" name="label_bezier_random">
+                                        <property name="text">
+                                            <string>随机系数:</string>
+                                        </property>
+                                    </widget>
+                                </item>
+                                <item>
+                                    <widget class="QSlider" name="slider_bezier_random">
+                                        <property name="minimum">
+                                            <number>0</number>
+                                        </property>
+                                        <property name="maximum">
+                                            <number>100</number>
+                                        </property>
+                                        <property name="value">
+                                            <number>30</number>
+                                        </property>
+                                        <property name="orientation">
+                                            <enum>Qt::Horizontal</enum>
+                                        </property>
+                                    </widget>
+                                </item>
+                                <item>
+                                    <widget class="QLineEdit" name="label_bezier_random_value">
+                                        <property name="text">
+                                            <string>0.30</string>
+                                        </property>
+                                    </widget>
+                                </item>
+                            </layout>
+                        </item>
+                        <item>
+                            <layout class="QHBoxLayout" name="horizontalLayout_bezier_steps">
+                                <item>
+                                    <widget class="QLabel" name="label_bezier_steps">
+                                        <property name="text">
+                                            <string>平滑度:</string>
+                                        </property>
+                                    </widget>
+                                </item>
+                                <item>
+                                    <widget class="QSlider" name="slider_bezier_steps">
+                                        <property name="minimum">
+                                            <number>1</number>
+                                        </property>
+                                        <property name="maximum">
+                                            <number>50</number>
+                                        </property>
+                                        <property name="value">
+                                            <number>8</number>
+                                        </property>
+                                        <property name="orientation">
+                                            <enum>Qt::Horizontal</enum>
+                                        </property>
+                                    </widget>
+                                </item>
+                                <item>
+                                    <widget class="QLineEdit" name="label_bezier_steps_value">
+                                        <property name="text">
+                                            <string>8</string>
+                                        </property>
+                                    </widget>
+                                </item>
+                            </layout>
+                        </item>
+                        <item>
+                            <layout class="QHBoxLayout" name="horizontalLayout_bezier_speed">
+                                <item>
+                                    <widget class="QLabel" name="label_bezier_speed">
+                                        <property name="text">
+                                            <string>速度(ms):</string>
+                                        </property>
+                                    </widget>
+                                </item>
+                                <item>
+                                    <widget class="QSlider" name="slider_bezier_speed">
+                                        <property name="minimum">
+                                            <number>0</number>
+                                        </property>
+                                        <property name="maximum">
+                                            <number>10</number>
+                                        </property>
+                                        <property name="value">
+                                            <number>1</number>
+                                        </property>
+                                        <property name="orientation">
+                                            <enum>Qt::Horizontal</enum>
+                                        </property>
+                                    </widget>
+                                </item>
+                                <item>
+                                    <widget class="QLineEdit" name="label_bezier_speed_value">
+                                        <property name="text">
+                                            <string>1</string>
+                                        </property>
+                                    </widget>
+                                </item>
+                            </layout>
+                        </item>
+                    </layout>
+                </widget>
+            </item>
+            <item>
+                <widget class="QGroupBox" name="groupBox_target_offset">
+                    <property name="title">
+                        <string>瞄准位置</string>
+                    </property>
+                    <layout class="QVBoxLayout" name="verticalLayout_target_offset">
+                        <item>
+                            <layout class="QHBoxLayout" name="horizontalLayout_target_offset_x">
+                                <item>
+                                    <widget class="QLabel" name="label_target_offset_x">
+                                        <property name="text">
+                                            <string>X:</string>
+                                        </property>
+                                    </widget>
+                                </item>
+                                <item>
+                                    <widget class="QSlider" name="slider_target_offset_x">
+                                        <property name="minimum">
+                                            <number>0</number>
+                                        </property>
+                                        <property name="maximum">
+                                            <number>100</number>
+                                        </property>
+                                        <property name="value">
+                                            <number>50</number>
+                                        </property>
+                                        <property name="orientation">
+                                            <enum>Qt::Horizontal</enum>
+                                        </property>
+                                    </widget>
+                                </item>
+                                <item>
+                                    <widget class="QLineEdit" name="label_target_offset_x_value">
+                                        <property name="text">
+                                            <string>0.50</string>
+                                        </property>
+                                    </widget>
+                                </item>
+                            </layout>
+                        </item>
+                        <item>
+                            <layout class="QHBoxLayout" name="horizontalLayout_target_offset_y">
+                                <item>
+                                    <widget class="QLabel" name="label_target_offset_y">
+                                        <property name="text">
+                                            <string>Y:</string>
+                                        </property>
+                                    </widget>
+                                </item>
+                                <item>
+                                    <widget class="QSlider" name="slider_target_offset_y">
+                                        <property name="minimum">
+                                            <number>0</number>
+                                        </property>
+                                        <property name="maximum">
+                                            <number>100</number>
+                                        </property>
+                                        <property name="value">
+                                            <number>50</number>
+                                        </property>
+                                        <property name="orientation">
+                                            <enum>Qt::Horizontal</enum>
+                                        </property>
+                                    </widget>
+                                </item>
+                                <item>
+                                    <widget class="QLineEdit" name="label_target_offset_y_value">
+                                        <property name="text">
+                                            <string>0.50</string>
+                                        </property>
+                                    </widget>
+                                </item>
+                            </layout>
+                        </item>
+                    </layout>
+                </widget>
+            </item>
+            <item>
+                <widget class="QGroupBox" name="groupBox_hotkey">
+                    <property name="title">
+                        <string>快捷键</string>
+                    </property>
+                    <layout class="QVBoxLayout" name="verticalLayout_hotkey">
+                        <item>
+                            <layout class="QHBoxLayout" name="horizontalLayout_hotkey">
+                                <item>
+                                    <widget class="QLabel" name="label_hotkey">
+                                        <property name="text">
+                                            <string>瞄准1:</string>
+                                        </property>
+                                    </widget>
+                                </item>
+                                <item>
+                                    <widget class="HotkeyEdit" name="hotkeyEdit"/>
+                                </item>
+                            </layout>
+                        </item>
+                        <item>
+                            <layout class="QHBoxLayout" name="horizontalLayout_hotkey2">
+                                <item>
+                                    <widget class="QLabel" name="label_hotkey2">
+                                        <property name="text">
+                                            <string>瞄准2:</string>
+                                        </property>
+                                    </widget>
+                                </item>
+                                <item>
+                                    <widget class="HotkeyEdit" name="hotkeyEdit2"/>
+                                </item>
+                            </layout>
+                        </item>
+                    </layout>
+                </widget>
+            </item>
+            <item>
+                <spacer name="verticalSpacer">
+                    <property name="orientation">
+                        <enum>Qt::Vertical</enum>
+                    </property>
+                    <property name="sizeHint" stdset="0">
+                        <size>
+                            <width>20</width>
+                            <height>40</height>
+                        </size>
+                    </property>
+                </spacer>
+            </item>
+            <item>
+                <layout class="QHBoxLayout" name="horizontalLayout_button">
+                    <item>
+                        <widget class="QComboBox" name="comboBox_model">
+                            <property name="sizePolicy">
+                                <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                                    <horstretch>3</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <item>
+                                <property name="text">
+                                    <string>256</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>320</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>416</string>
+                                </property>
+                            </item>
+                            <item>
+                                <property name="text">
+                                    <string>640</string>
+                                </property>
+                            </item>
+                        </widget>
+                    </item>
+                    <item>
+                        <widget class="QPushButton" name="m_startButton">
+                            <property name="sizePolicy">
+                                <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                                    <horstretch>7</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="text">
+                                <string>开始检测</string>
+                            </property>
+                        </widget>
+                    </item>
+                    <item>
+                        <widget class="QPushButton" name="m_toggleDrawWindowButton">
+                            <property name="text">
+                                <string>绘制</string>
+                            </property>
+                        </widget>
+                    </item>
+                </layout>
+            </item>
+        </layout>
+    </widget>
+    <customwidgets>
+        <customwidget>
+            <class>HotkeyEdit</class>
+            <extends>QLineEdit</extends>
+            <header>../mouse/hotkey_edit.h</header>
+        </customwidget>
+    </customwidgets>
+    <resources/>
+    <connections/>
+</ui>

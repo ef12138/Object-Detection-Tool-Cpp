@@ -1,0 +1,26 @@
+# 构建产物
+build/
+cmake-build-*/
+*.exe
+*.dll
+*.obj
+*.o
+
+# 模型体积大，自行准备
+models/
+
+# 运行时配置（含个人调参）
+config.ini
+
+# 本地工作目录
+.workbuddy/
+.idea/
+*.user
+
+# 派生文件：发布用的排版稿与自包含预览
+docs/发布帖.md
+docs/预览.html
+docs/release/
+
+# 本地设计过程文档
+design-specs/
