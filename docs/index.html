@@ -369,7 +369,7 @@ html[data-theme="light"] .pid2 .gnd,html[data-theme="light"] .pid2 .vax,html[dat
     <p class="sub">纯 C++ / Qt 写的三角州行动实时目标检测自动瞄准工具</p>
 
     <div class="lead">
-      <p><strong>抓屏幕中心的一块画面 → 跑目标检测 → 把框画回屏幕上 → 按住某个键时，把鼠标朝目标方向推一点。</strong></p>
+      <p><strong>抓屏幕中心的一块画面 → 跑目标检测 → 把框画回屏幕上 → 按住快捷键时，把鼠标朝目标方向推一点。</strong></p>
       <p>抓屏DXGI Desktop Duplication，推理ONNX Runtime（DirectML），绘制透明置顶 Qt 窗口。</p>
       <p><strong>性能翻倍</strong>：同一个模型、同一块显卡，从抓屏到推理到出框整条链路都在显存里走完，省掉 Python 解释器和 PyTorch 的调度与来回拷贝。</p>
     </div>
@@ -398,7 +398,7 @@ html[data-theme="light"] .pid2 .gnd,html[data-theme="light"] .pid2 .vax,html[dat
 <section class="sec">
   <p class="sec-h">Core</p>
   <h2 class="sec-t">四个核心动作，一环扣一环</h2>
-  <p class="sec-d">没有 Python，没有 OpenCV 窗口，没有 GDI 截屏。抓屏拿的是 D3D11 纹理，推理跑在 DirectML 上，绘制是另一个透明窗口，三者互不等待；从框到鼠标的那一段，交给 PID 和贝塞尔——而且只对敌人生效。</p>
+  <p class="sec-d">抓屏拿的是 D3D11 纹理，推理跑在 DirectML 上，绘制是另一个透明窗口，三者互不等待；从框到鼠标的那一段，交给 PID 和贝塞尔——而且只对敌人生效。</p>
 
   <div class="feat">
 
@@ -514,7 +514,7 @@ html[data-theme="light"] .pid2 .gnd,html[data-theme="light"] .pid2 .vax,html[dat
       </div>
       <div class="card-txt">
         <h3><em>03</em>PID 位置环</h3>
-        <p>框心和准心的差，拆成<span class="k">高度与水平两路</span>分别喂给 PID。图上这架是已经调稳的状态——大超调早就压掉了，只剩高度上这点呼吸式的微调。</p>
+        <p>框心和准心的偏差拆成<span class="k">高度与水平两路</span>，各走一遍 PID：P 按当前差多少给推进量，I 把长期残留的偏差磨到零，D 压住冲过头的那一下。输出是每帧该推几像素的增量，鼠标顺着目标平滑贴过去，不会一怼到框心就反弹。</p>
       </div>
     </article>
 
