@@ -12,7 +12,6 @@
 - **规模**：C++ 源码约 3200 行，产物是一个 exe + 若干 DLL
 - **软件体积**：exe 约 550 KB；运行库（exe + Qt6 + ONNX Runtime + DirectML）约 58 MB；安装包与仓库都不带模型，四个尺寸的模型加 QQ 群 **207341814** 获取
 - **官网**：<https://ef12138.github.io/Object-Detection-Tool-Cpp/>
-- **开源地址**：<https://github.com/ef12138/Object-Detection-Tool-Cpp>
 - **安装包**：<https://pan.xunlei.com/s/VP5A0JmwlXn1FLglZPqF5_ZOA1?pwd=jdvw> （提取码 `jdvw`）
 - **版本**：2.2
 
