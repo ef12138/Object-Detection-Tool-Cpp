@@ -24,3 +24,9 @@ docs/release/
 
 # 本地设计过程文档
 design-specs/
+
+# 打包好的发布目录（本地生成）
+dist/
+
+# 贴吧/论坛用的发布文案
+docs/贴吧发布.md

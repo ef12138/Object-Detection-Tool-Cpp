@@ -577,11 +577,12 @@ QString projectUrl() {
 // 显示文字去掉了 scheme 和 host（只留 owner/repo）：卡片里能用的宽度约 200px，
 // 整条 https 地址会顶出卡片右边（实测会被裁掉结尾）。
 QString aboutLinkHtml(const QString& url, const QColor& color) {
+    // 显示文字只留仓库名：卡片里可用宽度就两百来像素，整条 URL 放不下，
+    // owner/repo 也顶到边。href 仍是完整地址，点了照样能跳。
     QString shown = url;
-    shown.remove(QStringLiteral("https://"));
-    shown.remove(QStringLiteral("http://"));
-    shown.remove(QStringLiteral("github.com/"));
     while (shown.endsWith(QLatin1Char('/'))) shown.chop(1);
+    const int slash = shown.lastIndexOf(QLatin1Char('/'));
+    if (slash >= 0) shown = shown.mid(slash + 1);
     return QStringLiteral("<a href=\"%1\" style=\"color:%2; font-size:12px; "
                           "text-decoration:none;\">%3</a>")
         .arg(url.toHtmlEscaped(), color.name(), shown.toHtmlEscaped());
