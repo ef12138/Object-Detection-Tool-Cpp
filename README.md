@@ -40,16 +40,10 @@
 ### 六个功能页
 
 | 推理 | PID |
-| --- | --- |
+| :---: | :---: |
 | ![推理](docs/images/03-inference.png) | ![PID](docs/images/04-pid.png) |
-
-| 贝塞尔曲线 | 瞄准位置 |
-| --- | --- |
-| ![贝塞尔曲线](docs/images/05-bezier.png) | ![瞄准位置](docs/images/06-aim.png) |
-
-| 快捷键 | 关于 |
-| --- | --- |
-| ![快捷键](docs/images/07-hotkey.png) | ![关于](docs/images/08-about.png) |
+| **贝塞尔曲线**<br>![贝塞尔曲线](docs/images/05-bezier.png) | **瞄准位置**<br>![瞄准位置](docs/images/06-aim.png) |
+| **快捷键**<br>![快捷键](docs/images/07-hotkey.png) | **关于**<br>![关于](docs/images/08-about.png) |
 
 几个设计上的取舍：
 
