@@ -138,17 +138,23 @@ h1{margin:0;font-size:clamp(32px,5vw,56px);line-height:1.1;letter-spacing:-.028e
 .tgt.a{animation:tA 6s ease-in-out infinite}
 .tgt.b{animation:tB 7.2s ease-in-out infinite}
 .tgt.c{animation:tC 5.4s ease-in-out infinite}
-.box{position:absolute;left:-6px;top:-6px;width:34px;height:50px;border:1.5px solid #22d3ee;border-radius:3px;
-  box-shadow:0 0 0 1px rgba(34,211,238,.10),0 0 16px -3px rgba(34,211,238,.55)}
-.box::before,.box::after{content:"";position:absolute;width:7px;height:7px;border:2px solid #22d3ee}
-.box::before{left:-2px;top:-2px;border-right:0;border-bottom:0}
-.box::after{right:-2px;bottom:-2px;border-left:0;border-top:0}
-.box i{position:absolute;left:-2px;top:-15px;font-size:9.5px;line-height:14px;padding:0 5px;
-  background:#22d3ee;color:#04222a;font-weight:800;border-radius:2px;font-style:normal;white-space:nowrap;
-  font-family:Consolas,Monaco,monospace}
-.box.a{animation:tA 6s ease-in-out infinite,tick .7s ease-in-out infinite alternate}
-.box.b{animation:tB 7.2s ease-in-out infinite,tick .7s .2s ease-in-out infinite alternate}
-.box.c{animation:tC 5.4s ease-in-out infinite,tick .7s .4s ease-in-out infinite alternate}
+/* 检测框：四个角的 L 形线，1px，颜色按类别 —— 与 draw.cpp 的绘制一致 */
+.det{position:absolute;left:-6px;top:-6px;width:34px;height:50px;color:#ff5252}
+.det span{position:absolute;width:8px;height:8px;border:1px solid currentColor}
+.det span:nth-child(1){left:0;top:0;border-right:0;border-bottom:0}
+.det span:nth-child(2){right:0;top:0;border-left:0;border-bottom:0}
+.det span:nth-child(3){left:0;bottom:0;border-right:0;border-top:0}
+.det span:nth-child(4){right:0;bottom:0;border-left:0;border-top:0}
+/* 置信度血条：宽度等于框宽，灰色底 + 按置信度填充浅白 */
+.det .hp{position:absolute;left:0;bottom:100%;margin-bottom:2px;width:100%;height:6px;
+  background:rgba(100,100,100,.55);overflow:hidden}
+.det .hp::after{content:"";display:block;height:100%;width:var(--c,80%);background:#d2d2d2}
+.det.a{animation:tA 6s ease-in-out infinite}
+.det.b{animation:tB 7.2s ease-in-out infinite}
+.det.c{animation:tC 5.4s ease-in-out infinite}
+.hud{position:absolute;left:10px;top:9px;padding:3px 6px;border-radius:2px;
+  background:rgba(0,0,0,.55);color:#ececec;font:8.5px/1.5 Consolas,Monaco,monospace;
+  letter-spacing:.02em;white-space:nowrap}
 @keyframes tA{0%,100%{transform:translate(34px,92px)}25%{transform:translate(66px,58px)}50%{transform:translate(126px,100px)}75%{transform:translate(80px,138px)}}
 @keyframes tB{0%,100%{transform:translate(246px,52px)}30%{transform:translate(214px,88px)}60%{transform:translate(268px,116px)}80%{transform:translate(232px,70px)}}
 @keyframes tC{0%,100%{transform:translate(160px,150px)}35%{transform:translate(202px,142px)}70%{transform:translate(132px,160px)}}
@@ -167,11 +173,8 @@ html[data-theme="light"] .mini .lbl{color:#4a5568;background:rgba(255,255,255,.7
              linear-gradient(140deg,#10141c,#0a0d13)}
 html[data-theme="light"] .mini .scene{background:radial-gradient(circle at 60% 38%,rgba(90,120,180,.18),transparent 54%),linear-gradient(140deg,#dfe5ef,#cdd6e4)}
 .mini .ov{position:absolute;inset:0;z-index:2}
-.ov .b1,.ov .b2{position:absolute;border:2px solid #22d3ee;border-radius:3px;
-  box-shadow:0 0 18px -2px rgba(34,211,238,.85);animation:ovPulse 2.2s ease-in-out infinite}
-.ov .b1{left:28%;top:22%;width:36%;height:48%}
-.ov .b2{left:56%;top:44%;width:24%;height:32%;animation-delay:.5s}
-@keyframes ovPulse{0%,100%{opacity:.72}50%{opacity:1}}
+.ov .det span{width:6px;height:6px}
+.ov .det .hp{height:4px;margin-bottom:2px}
 .mid{display:flex;flex-direction:column;align-items:center;gap:6px;color:var(--muted);
   font-size:10px;letter-spacing:.1em;white-space:nowrap}
 .mid .lock{font-size:15px;color:var(--green);line-height:1}
@@ -190,30 +193,68 @@ html[data-theme="light"] .mini .scene{background:radial-gradient(circle at 60% 3
   animation:ringPulse 4.4s ease-in-out infinite}
 @keyframes ringPulse{0%,40%{opacity:.05;transform:scale(.6)}50%,74%{opacity:.95;transform:scale(1)}100%{opacity:.05;transform:scale(1.3)}}
 
-/* --- stage 4: hold --- */
-.hold{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px}
-.hold-row{display:flex;align-items:center;gap:26px}
-.key{width:62px;height:62px;border-radius:12px;border:1px solid var(--line);background:var(--panel-2);
-  display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--muted);
-  letter-spacing:.04em;animation:press 4s ease-in-out infinite}
-@keyframes press{
-  0%,10%{transform:translateY(0);border-color:var(--line);color:var(--muted);box-shadow:none}
-  20%,60%{transform:translateY(3px);border-color:var(--accent);color:var(--accent);
-    box-shadow:0 0 0 5px rgba(75,140,255,.10),0 0 24px -6px var(--glow)}
-  72%,100%{transform:translateY(0);border-color:var(--line);color:var(--muted);box-shadow:none}
+/* --- stage 4: bezier（二次贝塞尔的控制点与手柄） --- */
+.handle{fill:none;stroke:var(--dim);stroke-width:1;stroke-dasharray:3 3;opacity:.55}
+.cpt{fill:var(--bg-2);stroke:var(--accent);stroke-width:1.2;opacity:.75}
+
+/* --- stage 3: pid / drone --- */
+.pid{position:absolute;inset:0}
+.pid-tag{position:absolute;right:16px;top:14px;font-size:9px;letter-spacing:.14em;color:var(--dim)}
+.halo{position:absolute;left:50%;top:50%;width:148px;height:148px;margin:-74px 0 0 -74px;
+  border:1px dashed var(--line);border-radius:50%}
+.halo::after{content:"悬停目标";position:absolute;left:50%;bottom:-19px;transform:translateX(-50%);
+  font-size:9px;letter-spacing:.12em;color:var(--dim);white-space:nowrap}
+.origin{position:absolute;left:50%;top:50%;width:6px;height:6px;margin:-3px 0 0 -3px;border-radius:50%;
+  background:var(--accent);opacity:.55;box-shadow:0 0 10px var(--glow)}
+.drone{position:absolute;left:50%;top:50%;width:80px;height:80px;margin:-40px 0 0 -40px;
+  animation:hover 7s cubic-bezier(.45,0,.55,1) infinite}
+.drone svg{width:100%;height:100%;display:block}
+.drone .arm{stroke:var(--muted);stroke-width:4.5;stroke-linecap:round;opacity:.4}
+.drone .rot{fill:none;stroke:var(--cyan);stroke-width:1.3;opacity:.4}
+.drone .blade{stroke:var(--cyan);stroke-width:2.2;stroke-linecap:round;opacity:.85;
+  transform-box:fill-box;transform-origin:center;animation:spin .5s linear infinite}
+.drone .body{fill:var(--panel-2);stroke:var(--accent);stroke-width:1.6}
+.drone .cam{fill:var(--accent)}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes hover{
+  0%,8%{transform:translate(0,0)}
+  17%{transform:translate(64px,-31px)}
+  30%{transform:translate(18px,14px)}
+  42%{transform:translate(-13px,-7px)}
+  54%{transform:translate(6px,4px)}
+  65%{transform:translate(-3px,-2px)}
+  75%{transform:translate(1px,1px)}
+  84%,100%{transform:translate(0,0)}
 }
-.cursor{position:relative;width:118px;height:56px}
-.cursor i{position:absolute;left:0;top:0;width:0;height:0;
-  border-left:14px solid var(--text);border-top:9px solid transparent;border-bottom:9px solid transparent;
-  transform:rotate(-30deg);transform-origin:left center;animation:sway 4s ease-in-out infinite}
-.cursor::after{content:"";position:absolute;left:-8px;top:-8px;width:24px;height:24px;border-radius:50%;
-  border:1px dashed var(--line);animation:sway 4s ease-in-out infinite}
-@keyframes sway{
-  0%,14%{transform:translate(0,0) rotate(-30deg)}
-  42%,58%{transform:translate(88px,32px) rotate(-30deg)}
-  74%,100%{transform:translate(0,0) rotate(-30deg)}
-}
-.press-note{font-size:10.5px;letter-spacing:.1em;color:var(--muted);text-align:center;line-height:1.7}
+.pid-curve{position:absolute;left:16px;bottom:24px;width:130px;height:44px}
+.pid-curve .axis{fill:none;stroke:var(--line);stroke-width:1}
+.pid-curve .wave{fill:none;stroke:var(--accent);stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;
+  stroke-dasharray:180;animation:pidwave 7s ease-in-out infinite,pidfade 7s linear infinite}
+.pid-cap{position:absolute;left:16px;bottom:70px;font-size:9px;letter-spacing:.12em;color:var(--dim)}
+@keyframes pidwave{0%{stroke-dashoffset:180}56%,100%{stroke-dashoffset:0}}
+@keyframes pidfade{0%,86%{opacity:1}97%,100%{opacity:0}}
+
+/* --- stage 5: aim（整行宽卡） --- */
+.card.wide{grid-column:1 / -1;flex-direction:row;align-items:stretch}
+.card.wide .stage{flex:1 1 58%;height:auto;min-height:248px;border-bottom:0;border-right:1px solid var(--line-2);
+  display:flex;align-items:center;justify-content:center;padding:24px 26px}
+.card.wide .card-txt{flex:1 1 42%;justify-content:center;padding:30px 34px}
+.aim5{position:relative;width:100%;max-width:720px;aspect-ratio:3}
+.aim5 svg{width:100%;height:100%;display:block}
+.trail5{fill:none;stroke:url(#g5);stroke-width:2.4;stroke-linecap:round;
+  stroke-dasharray:620;stroke-dashoffset:620;animation:d5 4.8s ease-in-out infinite}
+@keyframes d5{0%,4%{stroke-dashoffset:620}58%,100%{stroke-dashoffset:0}}
+.pp circle,.pp rect{fill:var(--muted);opacity:.62}
+.lockbox{fill:none;stroke:var(--cyan);stroke-width:1.7;opacity:0;animation:lk 4.8s linear infinite}
+.lockring{fill:none;stroke:var(--amber);stroke-width:1.6;opacity:0;
+  transform-box:fill-box;transform-origin:center;animation:lkr 4.8s ease-out infinite}
+.ch circle,.ch path{fill:none;stroke:var(--cyan);stroke-width:1.7;stroke-linecap:round}
+.ch .cen{fill:var(--cyan);stroke:none}
+.lockchip{position:absolute;left:84%;top:3%;font-size:9.5px;letter-spacing:.1em;color:var(--amber);
+  white-space:nowrap;opacity:0;animation:lk 4.8s linear infinite}
+@keyframes lk{0%,55%{opacity:0}61%,90%{opacity:1}97%,100%{opacity:0}}
+@keyframes lkr{0%,56%{opacity:0;transform:scale(.5)}62%{opacity:1;transform:scale(1)}
+  80%{opacity:.9;transform:scale(1.7)}92%,100%{opacity:0;transform:scale(2)}}
 
 /* ---------- pipeline ---------- */
 .pipe{display:flex;align-items:stretch;margin-top:6px;
@@ -250,19 +291,6 @@ html[data-theme="light"] .mini .scene{background:radial-gradient(circle at 60% 3
 .pf:nth-child(4) .bar u{--w:73%;animation-delay:.35s}
 @keyframes grow{to{width:var(--w)}}
 
-/* ---------- download ---------- */
-.dl-wrap{max-width:1140px;margin:0 auto;padding:0 24px 90px}
-.dl-box{position:relative;overflow:hidden;border-radius:18px;border:1px solid var(--line);
-  background:linear-gradient(135deg,var(--panel),var(--panel-2));padding:46px 44px}
-.dl-box::before{content:"";position:absolute;right:-90px;top:-90px;width:340px;height:340px;border-radius:50%;
-  background:radial-gradient(circle,rgba(75,140,255,.18),transparent 66%)}
-.dl-box h2{margin:0 0 10px;font-size:clamp(21px,2.6vw,28px);letter-spacing:-.02em}
-.dl-box p{margin:0 0 24px;color:var(--muted);font-size:14.5px;max-width:580px;line-height:1.8}
-.dl-box .cta{margin:0}
-.meta{display:flex;flex-wrap:wrap;gap:22px;margin-top:26px;padding-top:22px;border-top:1px solid var(--line-2);
-  font-size:12px;color:var(--dim)}
-.meta b{color:var(--muted);font-weight:600}
-
 /* ---------- footer ---------- */
 footer{border-top:1px solid var(--line-2);padding:34px 24px 46px;text-align:center}
 footer .l{font-size:12.5px;color:var(--dim);line-height:2;margin:4px 0}
@@ -274,12 +302,13 @@ footer a:hover{color:var(--accent);border-color:var(--accent)}
 html[data-theme="light"] .tgt{background:linear-gradient(160deg,rgba(68,100,163,.60),rgba(105,138,200,.32));
   border-color:rgba(42,72,132,.62)}
 html[data-theme="light"] .tgt::after{background:rgba(48,78,140,.75)}
-html[data-theme="light"] .box,html[data-theme="light"] .box::before,html[data-theme="light"] .box::after{border-color:#0e7490}
-html[data-theme="light"] .box i{background:#0e7490;color:#fff}
-html[data-theme="light"] .ov .b1,html[data-theme="light"] .ov .b2{border-color:#0e7490;box-shadow:0 0 14px -3px rgba(14,116,144,.55)}
+html[data-theme="light"] .det .hp{background:rgba(90,100,120,.35)}
+html[data-theme="light"] .det .hp::after{background:#4a5568}
+html[data-theme="light"] .hud{background:rgba(255,255,255,.8);color:#2a3140}
 html[data-theme="light"] .dot{fill:#1d4ed8}
 html[data-theme="light"] .ring{stroke:#b45309}
-html[data-theme="light"] .key{background:#fff}
+html[data-theme="light"] .drone .body{fill:#fff}
+html[data-theme="light"] .trail5{stroke:#0891b2}
 
 /* ---------- responsive ---------- */
 @media (max-width:860px){
@@ -292,8 +321,10 @@ html[data-theme="light"] .key{background:#fff}
   .hero{padding:64px 0 56px}
   .stats{gap:24px}
   .stat b{font-size:22px}
-  .dl-box{padding:32px 24px}
   .top a.gh{display:none}
+  .card.wide{flex-direction:column}
+  .card.wide .stage{border-right:0;border-bottom:1px solid var(--line-2);min-height:0;padding:24px 20px}
+  .card.wide .card-txt{padding:22px 24px 26px}
 }
 @media (max-width:520px){
   .stats{display:grid;grid-template-columns:1fr 1fr;gap:20px 18px}
@@ -303,7 +334,6 @@ html[data-theme="light"] .key{background:#fff}
   .stage{height:208px}
   .dual{gap:8px;padding:12px}
   .mid{font-size:8px}
-  .hold{gap:16px}
 }
 @media (prefers-reduced-motion:reduce){
   *{animation-duration:.001s!important;animation-iteration-count:1!important;transition:none!important}
@@ -318,7 +348,7 @@ html[data-theme="light"] .key{background:#fff}
     <div class="sp"></div>
     <a class="gh" href="https://github.com/ef12138/Object-Detection-Tool-Cpp" target="_blank" rel="noopener">GitHub</a>
     <a class="dl" href="https://pan.xunlei.com/s/VP5A0JmwlXn1FLglZPqF5_ZOA1?pwd=jdvw" target="_blank" rel="noopener">下载</a>
-    <button id="theme" type="button" title="切换深浅主题" aria-label="切换深浅主题">主题</button>
+    <button id="theme" type="button" title="切换主题" aria-label="切换主题">◐</button>
   </div>
 </header>
 
@@ -364,8 +394,8 @@ html[data-theme="light"] .key{background:#fff}
 
 <section class="sec">
   <p class="sec-h">Core</p>
-  <h2 class="sec-t">四个核心动作，全在显存里完成</h2>
-  <p class="sec-d">没有 Python，没有 OpenCV 窗口，没有 GDI 截屏。抓屏拿的是 D3D11 纹理，推理跑在 DirectML 上，绘制是另一个透明窗口，三者互不等待。</p>
+  <h2 class="sec-t">五个核心动作，一环扣一环</h2>
+  <p class="sec-d">没有 Python，没有 OpenCV 窗口，没有 GDI 截屏。抓屏拿的是 D3D11 纹理，推理跑在 DirectML 上，绘制是另一个透明窗口，三者互不等待；从框到鼠标的那一段，交给 PID 和贝塞尔。</p>
 
   <div class="feat">
 
@@ -373,16 +403,17 @@ html[data-theme="light"] .key{background:#fff}
       <div class="stage">
         <div class="grid-bg"></div>
         <div class="radar"></div>
+        <div class="hud">Capture: 0.004s | Inference: 0.003s | Total: 0.007s | Detections: 3</div>
         <div class="tgt a"></div>
         <div class="tgt b"></div>
         <div class="tgt c"></div>
-        <div class="box a"><i>person 0.92</i></div>
-        <div class="box b"><i>person 0.87</i></div>
-        <div class="box c"><i>person 0.74</i></div>
+        <div class="det a" style="--c:92%"><span></span><span></span><span></span><span></span><div class="hp"></div></div>
+        <div class="det b" style="--c:87%;color:#3ddc97"><span></span><span></span><span></span><span></span><div class="hp"></div></div>
+        <div class="det c" style="--c:74%;color:#f5b544"><span></span><span></span><span></span><span></span><div class="hp"></div></div>
       </div>
       <div class="card-txt">
         <h3><em>01</em>实时检测</h3>
-        <p>DXGI Desktop Duplication 直接拿 GPU 上的画面纹理，不进内存、不落盘。框跟着目标走，<span class="k">256 档一秒钟出 276 次结果</span>。</p>
+        <p>DXGI Desktop Duplication 直接拿 GPU 上的画面纹理，不进内存、不落盘。框是四个角的短线，<span class="k">框上方那条血条就是置信度</span>，256 档一秒钟出 276 次结果。</p>
       </div>
     </article>
 
@@ -392,7 +423,10 @@ html[data-theme="light"] .key{background:#fff}
           <div class="mini">
             <span class="lbl">叠加层所见</span>
             <div class="scene"></div>
-            <div class="ov"><div class="b1"></div><div class="b2"></div></div>
+            <div class="ov">
+              <div class="det" style="left:26%;top:30%;width:34%;height:44%;--c:88%"><span></span><span></span><span></span><span></span><div class="hp"></div></div>
+              <div class="det" style="left:60%;top:50%;width:22%;height:30%;--c:71%;color:#3ddc97"><span></span><span></span><span></span><span></span><div class="hp"></div></div>
+            </div>
           </div>
           <div class="mid">
             <span class="lock">◎</span>
@@ -413,6 +447,44 @@ html[data-theme="light"] .key{background:#fff}
 
     <article class="card">
       <div class="stage">
+        <div class="grid-bg"></div>
+        <div class="pid">
+          <span class="pid-tag">PID · 位置环</span>
+          <div class="halo"></div>
+          <div class="origin"></div>
+          <div class="drone">
+            <svg viewBox="0 0 96 96">
+              <line class="arm" x1="40" y1="40" x2="20" y2="20"/>
+              <line class="arm" x1="56" y1="40" x2="76" y2="20"/>
+              <line class="arm" x1="40" y1="56" x2="20" y2="76"/>
+              <line class="arm" x1="56" y1="56" x2="76" y2="76"/>
+              <circle class="rot" cx="20" cy="20" r="13"/>
+              <circle class="rot" cx="76" cy="20" r="13"/>
+              <circle class="rot" cx="20" cy="76" r="13"/>
+              <circle class="rot" cx="76" cy="76" r="13"/>
+              <line class="blade" x1="7" y1="20" x2="33" y2="20"/>
+              <line class="blade" x1="63" y1="20" x2="89" y2="20"/>
+              <line class="blade" x1="7" y1="76" x2="33" y2="76"/>
+              <line class="blade" x1="63" y1="76" x2="89" y2="76"/>
+              <rect class="body" x="34" y="32" width="28" height="32" rx="10"/>
+              <circle class="cam" cx="48" cy="55" r="4.5"/>
+            </svg>
+          </div>
+          <span class="pid-cap">误差曲线</span>
+          <svg class="pid-curve" viewBox="0 0 132 44" preserveAspectRatio="none">
+            <path class="axis" d="M0 22h132"/>
+            <path class="wave" d="M0 37 L6 30.8 L12 21.3 L18 14.8 L24 14.1 L30 18.1 L36 23.2 L42 26.3 L48 26.1 L54 23.7 L60 21 L66 19.6 L72 19.9 L78 21.4 L84 22.8 L90 23.4 L96 23 L102 22.2 L108 21.5 L114 21.3 L120 21.5 L126 22 L132 22.3"/>
+          </svg>
+        </div>
+      </div>
+      <div class="card-txt">
+        <h3><em>03</em>PID 位置环</h3>
+        <p>框心和屏幕中心差多少，就把这个误差喂给 PID：<span class="k">P 拉回来、D 压过冲、I 补掉长期偏差</span>。目标在跳、画面在抖，输出的仍然是一条平滑的位移——和无人机悬停自稳是同一套东西。</p>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="stage">
         <div class="aim">
           <svg viewBox="0 0 340 236" preserveAspectRatio="xMidYMid slice">
             <defs>
@@ -423,7 +495,10 @@ html[data-theme="light"] .key{background:#fff}
             </defs>
             <path class="cross" d="M0 118h340M170 0v236"/>
             <circle cx="170" cy="118" r="4" fill="none" stroke="#8f97a8" stroke-width="1.2" opacity=".5"/>
+            <path class="handle" d="M170 118 L196 118 M212 82 L246 66"/>
             <path class="trail" d="M170 118 C 196 118, 212 82, 246 66"/>
+            <circle class="cpt" cx="196" cy="118" r="3"/>
+            <circle class="cpt" cx="212" cy="82" r="3"/>
             <circle class="ring" cx="246" cy="66" r="13"/>
             <circle class="dot" cx="170" cy="118" r="5">
               <animateMotion dur="4.4s" repeatCount="indefinite" keyPoints="0;1;1" keyTimes="0;0.46;1"
@@ -434,25 +509,44 @@ html[data-theme="light"] .key{background:#fff}
         </div>
       </div>
       <div class="card-txt">
-        <h3><em>03</em>弧线瞄准</h3>
-        <p>误差先过 PID，再拆成几十个小步用 <code>SendInput</code> 送出去，鼠标是<span class="k">一条弧线滑过去</span>，不是瞬间闪现。松开热键立刻停。</p>
+        <h3><em>04</em>贝塞尔曲线</h3>
+        <p>位移不直冲：起点是准心、终点是框心，两个控制点（图上的小圆圈）决定弧往哪边拐。曲线再按时间拆成几十个小步，<span class="k">起手快、临门减速</span>，不会一冲过头。</p>
       </div>
     </article>
 
-    <article class="card">
+    <article class="card wide">
       <div class="stage">
         <div class="grid-bg"></div>
-        <div class="hold">
-          <div class="hold-row">
-            <div class="key">按住</div>
-            <div class="cursor"><i></i></div>
-          </div>
-          <div class="press-note">松手立即停</div>
+        <div class="aim5">
+          <svg viewBox="0 0 720 240">
+            <defs>
+              <linearGradient id="g5" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0" stop-color="#4b8cff" stop-opacity=".1"/>
+                <stop offset="1" stop-color="#22d3ee"/>
+              </linearGradient>
+            </defs>
+            <path class="trail5" d="M110 188 C 270 188, 440 66, 620 66"/>
+            <g class="pp">
+              <circle cx="620" cy="52" r="5.5"/>
+              <rect x="612" y="60" width="16" height="26" rx="7"/>
+            </g>
+            <rect class="lockbox" x="602" y="38" width="36" height="54" rx="3"/>
+            <circle class="lockring" cx="620" cy="66" r="12"/>
+            <g class="ch" transform="translate(110 188)">
+              <circle r="8.5"/>
+              <path d="M-15 0h-5M15 0h5M0 -15v-5M0 15v5"/>
+              <circle class="cen" r="1.6"/>
+              <animateMotion dur="4.8s" repeatCount="indefinite" keyPoints="0;1;1" keyTimes="0;0.6;1"
+                calcMode="spline" keySplines="0.30 0.70 0.30 1;0 0 1 1"
+                path="M0 0 C 160 0, 330 -122, 510 -122"/>
+            </g>
+          </svg>
+          <span class="lockchip">已锁定</span>
         </div>
       </div>
       <div class="card-txt">
-        <h3><em>04</em>只在按住时动</h3>
-        <p>检测一直跑，鼠标只在热键按下期间响应。键抬起的那一刻，下一个位移包就不再发出，<span class="k">不存在「松了还在飘」</span>。</p>
+        <h3><em>05</em>瞄准</h3>
+        <p>准心沿贝塞尔滑到框心，<span class="k">到位才亮锁定框</span>。整条链路由一个相对位移包驱动，热键一抬，下一个包就不再发出。</p>
       </div>
     </article>
 
@@ -475,7 +569,7 @@ html[data-theme="light"] .key{background:#fff}
 <section class="sec" style="padding-top:0">
   <p class="sec-h">Performance</p>
   <h2 class="sec-t">四档输入尺寸，随场景切换</h2>
-  <p class="sec-d">i5-12400F ／ RTX 3060 ／ 16 GB DDR4 ／ Windows 11 build 26200 ／ 1920×1080 单屏，端到端帧率。</p>
+  <p class="sec-d"><b>测试环境</b>：Intel i5-12400F ／ NVIDIA RTX 3060 ／ 16 GB DDR4 ／ Windows 11 build 26200 ／ 1920×1080 单屏　·　端到端帧率（抓屏 → 推理 → 出框 → 绘制）。</p>
   <div class="perf">
     <div class="pf"><div class="t">256 × 256</div><div class="v">276<i>fps</i></div><div class="bar"><u></u></div></div>
     <div class="pf"><div class="t">320 × 320</div><div class="v">236<i>fps</i></div><div class="bar"><u></u></div></div>
@@ -483,29 +577,6 @@ html[data-theme="light"] .key{background:#fff}
     <div class="pf"><div class="t">640 × 640</div><div class="v">202<i>fps</i></div><div class="bar"><u></u></div></div>
   </div>
 </section>
-
-<div class="dl-wrap">
-  <div class="dl-box">
-    <h2>下载 2.2</h2>
-    <p>绿色包，解压就能跑。四个尺寸的模型都打在里面，不用自己找权重、不用装 CUDA、不用配 Python 环境。</p>
-    <div class="cta">
-      <a class="main" href="https://pan.xunlei.com/s/VP5A0JmwlXn1FLglZPqF5_ZOA1?pwd=jdvw" target="_blank" rel="noopener">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 11l5 5 5-5"/><path d="M4 20h16"/></svg>
-        迅雷网盘下载
-      </a>
-      <a class="ghost" href="https://github.com/ef12138/Object-Detection-Tool-Cpp" target="_blank" rel="noopener">
-        <svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.4 7.4 0 0 1 2-.27c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
-        源码与文档
-      </a>
-    </div>
-    <div class="meta">
-      <span><b>提取码</b> jdvw</span>
-      <span><b>体积</b> 运行库 58 MB + 模型 178 MB</span>
-      <span><b>依赖</b> 无</span>
-      <span><b>协议</b> GPL-3.0</span>
-    </div>
-  </div>
-</div>
 
 <footer>
   <p class="l">Object Detection Tool 2.2　·　作者 EF　·　<a href="https://github.com/ef12138/Object-Detection-Tool-Cpp" target="_blank" rel="noopener">github.com/ef12138/Object-Detection-Tool-Cpp</a></p>
