@@ -2,7 +2,9 @@
 
 **抓屏幕中心的一块画面 → 跑目标检测 → 把框画回屏幕上 → 按住某个键时，把鼠标朝目标方向推一点。**
 
-纯 C++ / Qt 实现，不需要 Python、不需要 CUDA。抓屏走 DXGI Desktop Duplication，推理走 ONNX Runtime（DirectML），绘制是一个透明置顶的 Qt 窗口，参数全部落在 exe 同目录的 `config.ini`。
+抓屏走 DXGI Desktop Duplication，推理走 ONNX Runtime（DirectML），绘制是一个透明置顶的 Qt 窗口，参数全部落在 exe 同目录的 `config.ini`。整个工具是纯 C++ / Qt，编出来直接跑。
+
+**性能翻倍**：同一个模型、同一块显卡，从抓屏到推理到出框整条链路都在显存里走完，省掉 Python 解释器和 PyTorch 的调度与来回拷贝。
 
 - **平台**：Windows 10 / 11 x64
 - **技术栈**：C++20 · Qt 6.5.1 Widgets · CMake + Ninja · ONNX Runtime 1.22.1（DirectML）
