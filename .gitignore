@@ -6,9 +6,6 @@ cmake-build-*/
 *.obj
 *.o
 
-# 模型体积大，自行准备
-models/
-
 # 运行时配置（含个人调参）
 config.ini
 
@@ -30,3 +27,5 @@ dist/
 
 # 贴吧/论坛用的发布文案
 docs/贴吧发布.md
+docs/CSDN发布.md
+docs/CSDN发布-填写说明.txt

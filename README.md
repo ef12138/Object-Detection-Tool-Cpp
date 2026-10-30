@@ -10,6 +10,9 @@
 - **技术栈**：C++20 · Qt 6.5.1 Widgets · CMake + Ninja · ONNX Runtime 1.22.1（DirectML）
 - **实测环境**：Intel i5-12400F ／ NVIDIA RTX 3060 ／ 16 GB DDR4 ／ Windows 11 26200 ／ 1920×1080
 - **规模**：C++ 源码约 3200 行，产物是一个 exe + 若干 DLL
+- **软件体积**：exe 约 550 KB；运行库（exe + Qt6 + ONNX Runtime + DirectML）约 58 MB；四个尺寸的模型合计约 178 MB，安装包里都已打包
+- **开源地址**：https://github.com/ef12138/Object-Detection-Tool-Cpp
+- **安装包**：https://pan.xunlei.com/s/VP5A0JmwlXn1FLglZPqF5_ZOA1?pwd=jdvw （提取码 `jdvw`）
 - **版本**：2.2
 
 ## 整体架构
@@ -95,7 +98,9 @@ CMake 的 POST_BUILD 会自动把 Qt 与 ORT 的 DLL 拷到输出目录。
 
 ### 模型
 
-YOLO 系列导出的 ONNX，输出为通道优先的 `[1, 4+类别数, 检测框数]`，置信度是 logits。输入输出尺寸不写死，程序启动时从 session 里读回来，所以换模型、换类别数都不用改代码。
+`models/` 里已经放了 256 / 320 / 416 / 640 四个尺寸的 ONNX，`config.ini` 默认指向 `./models/lqm640.onnx`，克隆下来或解压安装包就能直接跑，不用另外找模型。
+
+都是 YOLO 系列导出的，输出为通道优先的 `[1, 4+类别数, 检测框数]`，置信度是 logits。输入输出尺寸不写死，程序启动时从 session 里读回来，所以换模型、换类别数都不用改代码。
 
 ### config.ini
 
@@ -169,6 +174,7 @@ Visible=true
 ├─ mouse/                       热键、PID、贝塞尔、SendInput
 ├─ draw/                        透明叠加层（不参与抓屏）
 ├─ assets/                      图标
+├─ models/                      256 / 320 / 416 / 640 四个尺寸的 .onnx
 ├─ docs/images/                 README 配图
 └─ CMakeLists.txt
 ```
