@@ -146,9 +146,9 @@ h1{margin:0;font-size:clamp(32px,5vw,56px);line-height:1.1;letter-spacing:-.028e
 .det span:nth-child(3){left:0;bottom:0;border-right:0;border-top:0}
 .det span:nth-child(4){right:0;bottom:0;border-left:0;border-top:0}
 /* 置信度血条：宽度等于框宽，灰色底 + 按置信度填充浅白 */
-.det .hp{position:absolute;left:0;bottom:100%;margin-bottom:2px;width:100%;height:6px;
-  background:rgba(100,100,100,.55);overflow:hidden}
-.det .hp::after{content:"";display:block;height:100%;width:var(--c,80%);background:#d2d2d2}
+.det .hp{position:absolute;left:0;bottom:100%;margin-bottom:2px;width:100%;height:4px;
+  background:rgba(100,100,100,.5);overflow:hidden}
+.det .hp::after{content:"";display:block;height:100%;width:var(--c,80%);background:#c9c9c9}
 .det.a{animation:tA 6s ease-in-out infinite}
 .det.b{animation:tB 7.2s ease-in-out infinite}
 .det.c{animation:tC 5.4s ease-in-out infinite}
@@ -160,101 +160,123 @@ h1{margin:0;font-size:clamp(32px,5vw,56px);line-height:1.1;letter-spacing:-.028e
 @keyframes tC{0%,100%{transform:translate(160px,150px)}35%{transform:translate(202px,142px)}70%{transform:translate(132px,160px)}}
 @keyframes tick{from{opacity:.62}to{opacity:1}}
 
-/* --- stage 2: overlay --- */
-.dual{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:16px;padding:18px}
-.mini{position:relative;flex:1;max-width:198px;aspect-ratio:16/10;border-radius:8px;overflow:hidden;
-  border:1px solid var(--line);background:#0a0d13}
-html[data-theme="light"] .mini{background:#e6ebf3}
-.mini .lbl{position:absolute;left:6px;top:5px;font-size:8.5px;letter-spacing:.06em;color:rgba(220,230,245,.6);
-  background:rgba(0,0,0,.42);padding:1px 5px;border-radius:3px;z-index:5}
-html[data-theme="light"] .mini .lbl{color:#4a5568;background:rgba(255,255,255,.72)}
-.mini .scene{position:absolute;inset:0;
-  background:radial-gradient(circle at 60% 38%,rgba(120,150,200,.22),transparent 54%),
-             linear-gradient(140deg,#10141c,#0a0d13)}
-html[data-theme="light"] .mini .scene{background:radial-gradient(circle at 60% 38%,rgba(90,120,180,.18),transparent 54%),linear-gradient(140deg,#dfe5ef,#cdd6e4)}
-.mini .ov{position:absolute;inset:0;z-index:2}
-.ov .det span{width:6px;height:6px}
-.ov .det .hp{height:4px;margin-bottom:2px}
-.mid{display:flex;flex-direction:column;align-items:center;gap:6px;color:var(--muted);
-  font-size:10px;letter-spacing:.1em;white-space:nowrap}
-.mid .lock{font-size:15px;color:var(--green);line-height:1}
-.mid .arrow{width:24px;height:1px;background:var(--line);position:relative}
-.mid .arrow::after{content:"";position:absolute;right:-1px;top:-2.5px;border:3px solid transparent;border-left-color:var(--accent)}
+/* --- stage: 瞄准（准心沿贝塞尔锁定敌人） --- */
+.aim2{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:4px}
+.aim2 svg{width:100%;height:100%;display:block}
+.cross{stroke:var(--muted);stroke-width:1;opacity:.42}
+.cenA{fill:none;stroke:var(--muted);stroke-width:1.2;opacity:.55}
+.foe{fill:var(--muted);opacity:.5}
+.cb{fill:none;stroke:#ff5252;stroke-width:1.4}
+.hpb{fill:rgba(100,100,100,.62)}
+.hpf{fill:#d2d2d2}
+.trail2{fill:none;stroke:url(#g2);stroke-width:2.2;stroke-linecap:round;
+  stroke-dasharray:160;stroke-dashoffset:160;animation:draw2 4.6s ease-in-out infinite}
+@keyframes draw2{0%{stroke-dashoffset:160}54%,100%{stroke-dashoffset:0}}
+.ch circle,.ch path{fill:none;stroke:var(--cyan);stroke-width:1.7;stroke-linecap:round}
+.ch{animation:chair 4.6s linear infinite}
+@keyframes chair{0%,54%{opacity:1}62%,90%{opacity:.3}97%,100%{opacity:1}}
+.ch .cen{fill:var(--cyan);stroke:none}
+.lockring{fill:none;stroke:var(--amber);stroke-width:1.6;opacity:0;
+  transform-box:fill-box;transform-origin:center;animation:lkr 4.6s ease-out infinite}
+.lockchip{position:absolute;font-size:9.5px;letter-spacing:.1em;color:var(--amber);
+  white-space:nowrap;opacity:0;animation:lk 4.6s linear infinite}
+@keyframes lk{0%,53%{opacity:0}59%,88%{opacity:1}96%,100%{opacity:0}}
+@keyframes lkr{0%,55%{opacity:0;transform:scale(.45)}61%{opacity:.95;transform:scale(1)}
+  80%{opacity:.85;transform:scale(1.5)}92%,100%{opacity:0;transform:scale(1.9)}}
 
-/* --- stage 3: aim --- */
-.aim{position:absolute;inset:0}
-.aim svg{width:100%;height:100%;display:block}
-.trail{fill:none;stroke:url(#gr);stroke-width:2.2;stroke-linecap:round;
-  stroke-dasharray:420;stroke-dashoffset:420;animation:draw 4.4s ease-in-out infinite}
-@keyframes draw{0%{stroke-dashoffset:420}46%,74%{stroke-dashoffset:0}100%{stroke-dashoffset:0}}
-.dot{fill:#7aa8ff;filter:drop-shadow(0 0 7px rgba(75,140,255,.95))}
-.cross{stroke:var(--muted);stroke-width:1;opacity:.45}
-.ring{fill:none;stroke:#f5b544;stroke-width:1.6;opacity:.2;transform-box:fill-box;transform-origin:center;
-  animation:ringPulse 4.4s ease-in-out infinite}
-@keyframes ringPulse{0%,40%{opacity:.05;transform:scale(.6)}50%,74%{opacity:.95;transform:scale(1)}100%{opacity:.05;transform:scale(1.3)}}
+/* --- stage: 三类角色（敌人 / 队友 / 深蓝） --- */
+.roles{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:8px;padding:24px 12px 14px}
+.role{flex:1;max-width:112px;display:flex;flex-direction:column;align-items:center;gap:11px}
+.rt{position:relative;width:62px;height:86px}
+.fig{position:absolute;left:50%;top:18px;transform:translateX(-50%);width:30px;height:50px;
+  border-radius:13px 13px 6px 6px;
+  background:linear-gradient(160deg,rgba(180,205,255,.42),rgba(120,150,220,.16));
+  border:1px solid rgba(150,185,255,.3)}
+.fig::after{content:"";position:absolute;left:50%;top:6px;transform:translateX(-50%);
+  width:9px;height:9px;border-radius:50%;background:rgba(200,220,255,.72)}
+.rbox{position:absolute;left:3px;top:8px;width:56px;height:70px;color:#ff5252}
+.rbox span{position:absolute;width:8px;height:8px;border:1px solid currentColor}
+.rbox span:nth-child(1){left:0;top:0;border-right:0;border-bottom:0}
+.rbox span:nth-child(2){right:0;top:0;border-left:0;border-bottom:0}
+.rbox span:nth-child(3){left:0;bottom:0;border-right:0;border-top:0}
+.rbox span:nth-child(4){right:0;bottom:0;border-left:0;border-top:0}
+.rbox .hp{position:absolute;left:0;bottom:100%;margin-bottom:3px;width:100%;height:4px;
+  background:rgba(100,100,100,.5);overflow:hidden}
+.rbox .hp::after{content:"";display:block;height:100%;width:var(--c,80%);background:#c9c9c9}
+.role.mate .rbox{color:#3ddc97}
+.role.navy .rbox{color:#3b82f6}
+.rlock{position:absolute;left:-4px;top:1px;width:70px;height:84px;border:1px dashed var(--amber);
+  border-radius:7px;opacity:0;animation:rlk 4.4s ease-in-out infinite}
+@keyframes rlk{0%,14%{opacity:0;transform:scale(1.05)}26%,70%{opacity:.85;transform:scale(1)}
+  86%,100%{opacity:0;transform:scale(1)}}
+.role b{font-size:12.5px;font-weight:700;letter-spacing:.02em;line-height:1}
+.role i{font-style:normal;font-size:9.5px;letter-spacing:.04em;color:var(--dim);white-space:nowrap}
+.role i.on{color:var(--amber)}
 
-/* --- stage 4: bezier（二次贝塞尔的控制点与手柄） --- */
-.handle{fill:none;stroke:var(--dim);stroke-width:1;stroke-dasharray:3 3;opacity:.55}
-.cpt{fill:var(--bg-2);stroke:var(--accent);stroke-width:1.2;opacity:.75}
-
-/* --- stage 3: pid / drone --- */
-.pid{position:absolute;inset:0}
-.pid-tag{position:absolute;right:16px;top:14px;font-size:9px;letter-spacing:.14em;color:var(--dim)}
-.halo{position:absolute;left:50%;top:50%;width:148px;height:148px;margin:-74px 0 0 -74px;
-  border:1px dashed var(--line);border-radius:50%}
-.halo::after{content:"悬停目标";position:absolute;left:50%;bottom:-19px;transform:translateX(-50%);
-  font-size:9px;letter-spacing:.12em;color:var(--dim);white-space:nowrap}
-.origin{position:absolute;left:50%;top:50%;width:6px;height:6px;margin:-3px 0 0 -3px;border-radius:50%;
-  background:var(--accent);opacity:.55;box-shadow:0 0 10px var(--glow)}
-.drone{position:absolute;left:50%;top:50%;width:80px;height:80px;margin:-40px 0 0 -40px;
-  animation:hover 7s cubic-bezier(.45,0,.55,1) infinite}
-.drone svg{width:100%;height:100%;display:block}
-.drone .arm{stroke:var(--muted);stroke-width:4.5;stroke-linecap:round;opacity:.4}
-.drone .rot{fill:none;stroke:var(--cyan);stroke-width:1.3;opacity:.4}
-.drone .blade{stroke:var(--cyan);stroke-width:2.2;stroke-linecap:round;opacity:.85;
-  transform-box:fill-box;transform-origin:center;animation:spin .5s linear infinite}
-.drone .body{fill:var(--panel-2);stroke:var(--accent);stroke-width:1.6}
-.drone .cam{fill:var(--accent)}
-@keyframes spin{to{transform:rotate(360deg)}}
-@keyframes hover{
-  0%,8%{transform:translate(0,0)}
-  17%{transform:translate(64px,-31px)}
-  30%{transform:translate(18px,14px)}
-  42%{transform:translate(-13px,-7px)}
-  54%{transform:translate(6px,4px)}
-  65%{transform:translate(-3px,-2px)}
-  75%{transform:translate(1px,1px)}
-  84%,100%{transform:translate(0,0)}
+/* --- stage: PID 高度 / 水平（侧视图） --- */
+.pid2{position:absolute;inset:0}
+.pid-tag{position:absolute;right:14px;top:12px;font-size:9px;letter-spacing:.13em;color:var(--dim)}
+.pid2 .gnd{position:absolute;left:6%;right:6%;bottom:20px;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(125,160,220,.35) 12%,rgba(125,160,220,.35) 88%,transparent)}
+.pid2 .vax{position:absolute;left:50%;bottom:20px;width:1px;height:112px;border-left:1px dashed rgba(125,160,220,.32)}
+.pid2 .hax{position:absolute;left:calc(50% + 12px);right:12%;top:calc(100% - 132px);height:1px;border-top:1px dashed rgba(125,160,220,.32)}
+.axh{position:absolute;left:calc(50% - 38px);top:calc(100% - 84px);font-size:8.5px;letter-spacing:.16em;color:var(--muted)}
+.axx{position:absolute;right:calc(12% - 8px);top:calc(100% - 148px);font-size:8.5px;letter-spacing:.16em;color:var(--muted)}
+.d2{position:absolute;left:50%;top:calc(100% - 132px);width:196px;height:96px;margin:-48px 0 0 -98px}
+.d2 .lift,.d2 .shift{width:100%;height:100%}
+.d2 .lift{animation:lift 7s cubic-bezier(.4,0,.5,1) infinite}
+.d2 .shift{animation:shift 7s cubic-bezier(.4,0,.5,1) infinite}
+.d2 svg{width:100%;height:100%;display:block;overflow:visible}
+.d2 .disc{fill:rgba(34,211,238,.14);stroke:var(--cyan);stroke-width:1.1;opacity:.8;
+  transform-box:fill-box;transform-origin:center;animation:turb .26s linear infinite}
+.d2 .blade{stroke:var(--cyan);stroke-width:1.2;stroke-linecap:round;opacity:.35;
+  transform-box:fill-box;transform-origin:center;animation:turb .32s linear infinite}
+.d2 .arm{stroke:var(--muted);stroke-width:3;stroke-linecap:round;opacity:.45}
+.d2 .body{fill:var(--panel-2);stroke:var(--accent);stroke-width:1.5}
+.d2 .cam{fill:var(--accent);opacity:.85}
+.d2 .gear{stroke:var(--muted);stroke-width:1.4;stroke-linecap:round;opacity:.55}
+@keyframes turb{0%,100%{transform:scaleX(1);opacity:.85}50%{transform:scaleX(.8);opacity:.55}}
+@keyframes lift{
+  0%,9%{transform:translateY(0)}
+  18%{transform:translateY(-34px)}
+  30%{transform:translateY(12px)}
+  42%{transform:translateY(-7px)}
+  54%{transform:translateY(3px)}
+  66%{transform:translateY(-1.5px)}
+  78%,100%{transform:translateY(0)}
 }
-.pid-curve{position:absolute;left:16px;bottom:24px;width:130px;height:44px}
+@keyframes shift{
+  0%,11%{transform:translateX(0)}
+  22%{transform:translateX(38px)}
+  34%{transform:translateX(-14px)}
+  46%{transform:translateX(6px)}
+  58%{transform:translateX(-2px)}
+  70%,100%{transform:translateX(0)}
+}
+.pid-curve{position:absolute;left:16px;bottom:34px;width:118px;height:40px}
 .pid-curve .axis{fill:none;stroke:var(--line);stroke-width:1}
-.pid-curve .wave{fill:none;stroke:var(--accent);stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;
+.pid-curve .wave{fill:none;stroke:var(--cyan);stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;
   stroke-dasharray:180;animation:pidwave 7s ease-in-out infinite,pidfade 7s linear infinite}
-.pid-cap{position:absolute;left:16px;bottom:70px;font-size:9px;letter-spacing:.12em;color:var(--dim)}
+.pid-cap{position:absolute;left:14px;bottom:76px;font-size:9px;letter-spacing:.12em;color:var(--dim)}
 @keyframes pidwave{0%{stroke-dashoffset:180}56%,100%{stroke-dashoffset:0}}
 @keyframes pidfade{0%,86%{opacity:1}97%,100%{opacity:0}}
 
-/* --- stage 5: aim（整行宽卡） --- */
+/* --- 贝塞尔（整行宽卡） --- */
 .card.wide{grid-column:1 / -1;flex-direction:row;align-items:stretch}
-.card.wide .stage{flex:1 1 58%;height:auto;min-height:248px;border-bottom:0;border-right:1px solid var(--line-2);
-  display:flex;align-items:center;justify-content:center;padding:24px 26px}
-.card.wide .card-txt{flex:1 1 42%;justify-content:center;padding:30px 34px}
-.aim5{position:relative;width:100%;max-width:720px;aspect-ratio:3}
-.aim5 svg{width:100%;height:100%;display:block}
-.trail5{fill:none;stroke:url(#g5);stroke-width:2.4;stroke-linecap:round;
-  stroke-dasharray:620;stroke-dashoffset:620;animation:d5 4.8s ease-in-out infinite}
-@keyframes d5{0%,4%{stroke-dashoffset:620}58%,100%{stroke-dashoffset:0}}
-.pp circle,.pp rect{fill:var(--muted);opacity:.62}
-.lockbox{fill:none;stroke:var(--cyan);stroke-width:1.7;opacity:0;animation:lk 4.8s linear infinite}
-.lockring{fill:none;stroke:var(--amber);stroke-width:1.6;opacity:0;
-  transform-box:fill-box;transform-origin:center;animation:lkr 4.8s ease-out infinite}
-.ch circle,.ch path{fill:none;stroke:var(--cyan);stroke-width:1.7;stroke-linecap:round}
-.ch .cen{fill:var(--cyan);stroke:none}
-.lockchip{position:absolute;left:84%;top:3%;font-size:9.5px;letter-spacing:.1em;color:var(--amber);
-  white-space:nowrap;opacity:0;animation:lk 4.8s linear infinite}
-@keyframes lk{0%,55%{opacity:0}61%,90%{opacity:1}97%,100%{opacity:0}}
-@keyframes lkr{0%,56%{opacity:0;transform:scale(.5)}62%{opacity:1;transform:scale(1)}
-  80%{opacity:.9;transform:scale(1.7)}92%,100%{opacity:0;transform:scale(2)}}
+.card.wide .stage{flex:1 1 58%;height:auto;min-height:252px;border-bottom:0;border-right:1px solid var(--line-2);
+  display:flex;align-items:center;justify-content:center;padding:14px 18px}
+.card.wide .card-txt{flex:1 1 42%;justify-content:center;display:flex;flex-direction:column;padding:30px 34px}
+.aim{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:10px 14px}
+.aim svg{width:100%;height:100%;display:block}
+.trail{fill:none;stroke:url(#gr);stroke-width:2.4;stroke-linecap:round;
+  stroke-dasharray:560;stroke-dashoffset:560;animation:draw 4.8s ease-in-out infinite}
+@keyframes draw{0%{stroke-dashoffset:560}52%,76%{stroke-dashoffset:0}100%{stroke-dashoffset:0}}
+.dot{fill:#7aa8ff;filter:drop-shadow(0 0 7px rgba(75,140,255,.95))}
+.handle{fill:none;stroke:var(--dim);stroke-width:1;stroke-dasharray:3 3;opacity:.55}
+.cpt{fill:var(--bg-2);stroke:var(--accent);stroke-width:1.2;opacity:.75}
+.ring{fill:none;stroke:var(--amber);stroke-width:1.6;opacity:.2;transform-box:fill-box;transform-origin:center;
+  animation:ringPulse 4.8s ease-in-out infinite}
+@keyframes ringPulse{0%,38%{opacity:.05;transform:scale(.6)}50%,74%{opacity:.95;transform:scale(1)}100%{opacity:.05;transform:scale(1.3)}}
 
 /* ---------- pipeline ---------- */
 .pipe{display:flex;align-items:stretch;margin-top:6px;
@@ -307,8 +329,22 @@ html[data-theme="light"] .det .hp::after{background:#4a5568}
 html[data-theme="light"] .hud{background:rgba(255,255,255,.8);color:#2a3140}
 html[data-theme="light"] .dot{fill:#1d4ed8}
 html[data-theme="light"] .ring{stroke:#b45309}
-html[data-theme="light"] .drone .body{fill:#fff}
-html[data-theme="light"] .trail5{stroke:#0891b2}
+html[data-theme="light"] .trail{stroke:#0891b2}
+html[data-theme="light"] .cb{stroke:#d32f2f}
+html[data-theme="light"] .hpb{fill:rgba(90,100,120,.4)}
+html[data-theme="light"] .hpf{fill:#3a4557}
+html[data-theme="light"] .rbox .hp{background:rgba(90,100,120,.36)}
+html[data-theme="light"] .rbox .hp::after{background:#3a4557}
+html[data-theme="light"] .fig{background:linear-gradient(160deg,rgba(68,100,163,.6),rgba(105,138,200,.32));
+  border-color:rgba(42,72,132,.6)}
+html[data-theme="light"] .fig::after{background:rgba(48,78,140,.75)}
+html[data-theme="light"] .d2 .body{fill:#fff}
+html[data-theme="light"] .d2 .disc{fill:rgba(8,145,178,.12);stroke:#0e7490}
+html[data-theme="light"] .d2 .blade{stroke:#0e7490}
+html[data-theme="light"] .trail2{stroke:#0891b2}
+html[data-theme="light"] .ch circle,html[data-theme="light"] .ch path{stroke:#0e7490}
+html[data-theme="light"] .ch .cen{fill:#0e7490}
+html[data-theme="light"] .pid2 .gnd,html[data-theme="light"] .pid2 .vax,html[data-theme="light"] .pid2 .hax{opacity:.9}
 
 /* ---------- responsive ---------- */
 @media (max-width:860px){
@@ -323,7 +359,8 @@ html[data-theme="light"] .trail5{stroke:#0891b2}
   .stat b{font-size:22px}
   .top a.gh{display:none}
   .card.wide{flex-direction:column}
-  .card.wide .stage{border-right:0;border-bottom:1px solid var(--line-2);min-height:0;padding:24px 20px}
+  .card.wide .stage{flex:0 0 auto;height:214px;min-height:214px;border-right:0;
+    border-bottom:1px solid var(--line-2);padding:16px 18px}
   .card.wide .card-txt{padding:22px 24px 26px}
 }
 @media (max-width:520px){
@@ -331,9 +368,9 @@ html[data-theme="light"] .trail5{stroke:#0891b2}
   .cta{flex-direction:column}
   .cta a{justify-content:center;width:100%}
   .perf{grid-template-columns:1fr}
-  .stage{height:208px}
-  .dual{gap:8px;padding:12px}
-  .mid{font-size:8px}
+  .stage{height:214px}
+  .roles{gap:2px}
+  .d2{transform:scale(.92)}
 }
 @media (prefers-reduced-motion:reduce){
   *{animation-duration:.001s!important;animation-iteration-count:1!important;transition:none!important}
@@ -395,7 +432,7 @@ html[data-theme="light"] .trail5{stroke:#0891b2}
 <section class="sec">
   <p class="sec-h">Core</p>
   <h2 class="sec-t">五个核心动作，一环扣一环</h2>
-  <p class="sec-d">没有 Python，没有 OpenCV 窗口，没有 GDI 截屏。抓屏拿的是 D3D11 纹理，推理跑在 DirectML 上，绘制是另一个透明窗口，三者互不等待；从框到鼠标的那一段，交给 PID 和贝塞尔。</p>
+  <p class="sec-d">没有 Python，没有 OpenCV 窗口，没有 GDI 截屏。抓屏拿的是 D3D11 纹理，推理跑在 DirectML 上，绘制是另一个透明窗口，三者互不等待；从框到鼠标的那一段，交给 PID 和贝塞尔——而且只对敌人生效。</p>
 
   <div class="feat">
 
@@ -407,9 +444,9 @@ html[data-theme="light"] .trail5{stroke:#0891b2}
         <div class="tgt a"></div>
         <div class="tgt b"></div>
         <div class="tgt c"></div>
-        <div class="det a" style="--c:92%"><span></span><span></span><span></span><span></span><div class="hp"></div></div>
-        <div class="det b" style="--c:87%;color:#3ddc97"><span></span><span></span><span></span><span></span><div class="hp"></div></div>
-        <div class="det c" style="--c:74%;color:#f5b544"><span></span><span></span><span></span><span></span><div class="hp"></div></div>
+        <div class="det a" style="--c:86%"><span></span><span></span><span></span><span></span><div class="hp"></div></div>
+        <div class="det b" style="--c:71%;color:#3ddc97"><span></span><span></span><span></span><span></span><div class="hp"></div></div>
+        <div class="det c" style="--c:63%;color:#3b82f6"><span></span><span></span><span></span><span></span><div class="hp"></div></div>
       </div>
       <div class="card-txt">
         <h3><em>01</em>实时检测</h3>
@@ -419,56 +456,107 @@ html[data-theme="light"] .trail5{stroke:#0891b2}
 
     <article class="card">
       <div class="stage">
-        <div class="dual">
-          <div class="mini">
-            <span class="lbl">叠加层所见</span>
-            <div class="scene"></div>
-            <div class="ov">
-              <div class="det" style="left:26%;top:30%;width:34%;height:44%;--c:88%"><span></span><span></span><span></span><span></span><div class="hp"></div></div>
-              <div class="det" style="left:60%;top:50%;width:22%;height:30%;--c:71%;color:#3ddc97"><span></span><span></span><span></span><span></span><div class="hp"></div></div>
-            </div>
-          </div>
-          <div class="mid">
-            <span class="lock">◎</span>
-            <span class="arrow"></span>
-            <span>抓屏</span>
-          </div>
-          <div class="mini">
-            <span class="lbl">抓屏所得</span>
-            <div class="scene"></div>
-          </div>
+        <div class="grid-bg"></div>
+        <div class="aim2">
+          <svg viewBox="0 0 440 236">
+            <defs>
+              <linearGradient id="g2" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0" stop-color="#4b8cff" stop-opacity=".16"/>
+                <stop offset="1" stop-color="#22d3ee"/>
+              </linearGradient>
+            </defs>
+            <path class="cross" d="M0 152h440M186 0v236"/>
+            <circle class="cenA" cx="186" cy="152" r="4"/>
+            <g class="foe">
+              <circle cx="348" cy="62" r="5"/>
+              <rect x="340" y="70" width="16" height="26" rx="7"/>
+            </g>
+            <path class="trail2" d="M186 152 C 232 152, 268 92, 342 80"/>
+            <g transform="translate(330 53)">
+              <path class="cb" d="M0 9V0h9 M27 0h9v9 M36 45v9h-9 M9 54H0v-9"/>
+              <rect class="hpb" x="0" y="-8" width="36" height="4"/>
+              <rect class="hpf" x="0" y="-8" width="30" height="4"/>
+            </g>
+            <rect class="lockring" x="323" y="46" width="50" height="68" rx="5"/>
+            <g class="ch" transform="translate(186 152)">
+              <circle r="8.5"/>
+              <path d="M-15 0h-5M15 0h5M0 -15v-5M0 15v5"/>
+              <circle class="cen" r="1.6"/>
+              <animateMotion dur="4.6s" repeatCount="indefinite" keyPoints="0;1;1" keyTimes="0;0.54;1"
+                calcMode="spline" keySplines="0.30 0.70 0.30 1;0 0 1 1"
+                path="M0 0 C 46 0, 82 -60, 156 -72"/>
+            </g>
+          </svg>
+          <span class="lockchip" style="left:79%;top:14%">已锁定</span>
         </div>
       </div>
       <div class="card-txt">
-        <h3><em>02</em>叠加层不污染抓屏</h3>
-        <p>透明置顶窗口带 <code>WDA_EXCLUDEFROMCAPTURE</code>，系统层面就把它从抓屏里剔除。自己画的框<span class="k">不会被下一帧抓回来</span>，也就不会越叠越花。</p>
+        <h3><em>02</em>瞄准</h3>
+        <p>准心沿贝塞尔滑到框心，<span class="k">到位才亮锁定环</span>。整条链路由一个相对位移包驱动，热键一抬，下一个包就不再发出。</p>
       </div>
     </article>
 
     <article class="card">
       <div class="stage">
         <div class="grid-bg"></div>
-        <div class="pid">
-          <span class="pid-tag">PID · 位置环</span>
-          <div class="halo"></div>
-          <div class="origin"></div>
-          <div class="drone">
-            <svg viewBox="0 0 96 96">
-              <line class="arm" x1="40" y1="40" x2="20" y2="20"/>
-              <line class="arm" x1="56" y1="40" x2="76" y2="20"/>
-              <line class="arm" x1="40" y1="56" x2="20" y2="76"/>
-              <line class="arm" x1="56" y1="56" x2="76" y2="76"/>
-              <circle class="rot" cx="20" cy="20" r="13"/>
-              <circle class="rot" cx="76" cy="20" r="13"/>
-              <circle class="rot" cx="20" cy="76" r="13"/>
-              <circle class="rot" cx="76" cy="76" r="13"/>
-              <line class="blade" x1="7" y1="20" x2="33" y2="20"/>
-              <line class="blade" x1="63" y1="20" x2="89" y2="20"/>
-              <line class="blade" x1="7" y1="76" x2="33" y2="76"/>
-              <line class="blade" x1="63" y1="76" x2="89" y2="76"/>
-              <rect class="body" x="34" y="32" width="28" height="32" rx="10"/>
-              <circle class="cam" cx="48" cy="55" r="4.5"/>
-            </svg>
+        <div class="radar"></div>
+        <div class="roles">
+          <div class="role enemy">
+            <div class="rt">
+              <div class="fig"></div>
+              <div class="rbox" style="--c:82%"><span></span><span></span><span></span><span></span><div class="hp"></div></div>
+              <div class="rlock"></div>
+            </div>
+            <b>敌人</b><i class="on">锁定 · 瞄准</i>
+          </div>
+          <div class="role mate">
+            <div class="rt">
+              <div class="fig"></div>
+              <div class="rbox" style="--c:66%"><span></span><span></span><span></span><span></span><div class="hp"></div></div>
+            </div>
+            <b>队友</b><i>只画框</i>
+          </div>
+          <div class="role navy">
+            <div class="rt">
+              <div class="fig"></div>
+              <div class="rbox" style="--c:58%"><span></span><span></span><span></span><span></span><div class="hp"></div></div>
+            </div>
+            <b>深蓝</b><i>只画框</i>
+          </div>
+        </div>
+      </div>
+      <div class="card-txt">
+        <h3><em>03</em>三类角色，只瞄敌人</h3>
+        <p>框的颜色就是类别：<span class="k">敌人红、队友绿、深蓝蓝</span>。只有敌人会送进瞄准链路，另外两类只画框、不动鼠标。</p>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="stage">
+        <div class="grid-bg"></div>
+        <div class="pid2">
+          <span class="pid-tag">PID · 高度 / 水平</span>
+          <div class="gnd"></div>
+          <div class="vax"></div>
+          <div class="hax"></div>
+          <span class="axh">高度</span>
+          <span class="axx">水平</span>
+          <div class="d2">
+            <div class="lift"><div class="shift">
+              <svg viewBox="0 0 152 74">
+                <ellipse class="disc" cx="34" cy="19" rx="23" ry="4.6"/>
+                <line class="blade" x1="12" y1="19" x2="56" y2="19"/>
+                <ellipse class="disc" cx="118" cy="19" rx="23" ry="4.6"/>
+                <line class="blade" x1="96" y1="19" x2="140" y2="19"/>
+                <line class="arm" x1="34" y1="24" x2="62" y2="33"/>
+                <line class="arm" x1="118" y1="24" x2="90" y2="33"/>
+                <rect class="body" x="56" y="26" width="40" height="20" rx="9"/>
+                <circle class="cam" cx="76" cy="47" r="4.5"/>
+                <line class="gear" x1="63" y1="46" x2="58" y2="58"/>
+                <line class="gear" x1="89" y1="46" x2="94" y2="58"/>
+                <line class="gear" x1="53" y1="58" x2="99" y2="58"/>
+              </svg>
+            </div></div>
           </div>
           <span class="pid-cap">误差曲线</span>
           <svg class="pid-curve" viewBox="0 0 132 44" preserveAspectRatio="none">
@@ -478,80 +566,47 @@ html[data-theme="light"] .trail5{stroke:#0891b2}
         </div>
       </div>
       <div class="card-txt">
-        <h3><em>03</em>PID 位置环</h3>
-        <p>框心和屏幕中心差多少，就把这个误差喂给 PID：<span class="k">P 拉回来、D 压过冲、I 补掉长期偏差</span>。目标在跳、画面在抖，输出的仍然是一条平滑的位移——和无人机悬停自稳是同一套东西。</p>
-      </div>
-    </article>
-
-    <article class="card">
-      <div class="stage">
-        <div class="aim">
-          <svg viewBox="0 0 340 236" preserveAspectRatio="xMidYMid slice">
-            <defs>
-              <linearGradient id="gr" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0" stop-color="#4b8cff" stop-opacity=".18"/>
-                <stop offset="1" stop-color="#22d3ee"/>
-              </linearGradient>
-            </defs>
-            <path class="cross" d="M0 118h340M170 0v236"/>
-            <circle cx="170" cy="118" r="4" fill="none" stroke="#8f97a8" stroke-width="1.2" opacity=".5"/>
-            <path class="handle" d="M170 118 L196 118 M212 82 L246 66"/>
-            <path class="trail" d="M170 118 C 196 118, 212 82, 246 66"/>
-            <circle class="cpt" cx="196" cy="118" r="3"/>
-            <circle class="cpt" cx="212" cy="82" r="3"/>
-            <circle class="ring" cx="246" cy="66" r="13"/>
-            <circle class="dot" cx="170" cy="118" r="5">
-              <animateMotion dur="4.4s" repeatCount="indefinite" keyPoints="0;1;1" keyTimes="0;0.46;1"
-                calcMode="spline" keySplines="0.32 0.72 0.28 1;0 0 1 1"
-                path="M0 0 C 26 0, 42 -36, 76 -52"/>
-            </circle>
-          </svg>
-        </div>
-      </div>
-      <div class="card-txt">
-        <h3><em>04</em>贝塞尔曲线</h3>
-        <p>位移不直冲：起点是准心、终点是框心，两个控制点（图上的小圆圈）决定弧往哪边拐。曲线再按时间拆成几十个小步，<span class="k">起手快、临门减速</span>，不会一冲过头。</p>
+        <h3><em>04</em>PID 位置环</h3>
+        <p>框心和准心的差，拆成<span class="k">高度与水平两路</span>分别喂给 PID：P 拉回来、D 压过冲、I 补掉长期偏差。和无人机悬停自稳是同一套东西。</p>
       </div>
     </article>
 
     <article class="card wide">
       <div class="stage">
         <div class="grid-bg"></div>
-        <div class="aim5">
-          <svg viewBox="0 0 720 240">
+        <div class="aim">
+          <svg viewBox="0 0 640 240">
             <defs>
-              <linearGradient id="g5" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0" stop-color="#4b8cff" stop-opacity=".1"/>
+              <linearGradient id="gr" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0" stop-color="#4b8cff" stop-opacity=".18"/>
                 <stop offset="1" stop-color="#22d3ee"/>
               </linearGradient>
             </defs>
-            <path class="trail5" d="M110 188 C 270 188, 440 66, 620 66"/>
-            <g class="pp">
-              <circle cx="620" cy="52" r="5.5"/>
-              <rect x="612" y="60" width="16" height="26" rx="7"/>
-            </g>
-            <rect class="lockbox" x="602" y="38" width="36" height="54" rx="3"/>
-            <circle class="lockring" cx="620" cy="66" r="12"/>
-            <g class="ch" transform="translate(110 188)">
-              <circle r="8.5"/>
-              <path d="M-15 0h-5M15 0h5M0 -15v-5M0 15v5"/>
-              <circle class="cen" r="1.6"/>
-              <animateMotion dur="4.8s" repeatCount="indefinite" keyPoints="0;1;1" keyTimes="0;0.6;1"
+            <path class="cross" d="M0 190h640M150 0v240"/>
+            <circle class="cenA" cx="150" cy="190" r="4"/>
+            <path class="cb" d="M502 40V31h9 M529 31h9v9 M538 76v9h-9 M511 85h-9v-9"/>
+            <path class="handle" d="M150 190 L286 190 M386 58 L520 58"/>
+            <path class="trail" d="M150 190 C 286 190, 386 58, 520 58"/>
+            <circle class="cpt" cx="286" cy="190" r="3.2"/>
+            <circle class="cpt" cx="386" cy="58" r="3.2"/>
+            <circle class="ring" cx="520" cy="58" r="15"/>
+            <circle class="dot" cx="150" cy="190" r="5">
+              <animateMotion dur="4.8s" repeatCount="indefinite" keyPoints="0;1;1" keyTimes="0;0.62;1"
                 calcMode="spline" keySplines="0.30 0.70 0.30 1;0 0 1 1"
-                path="M0 0 C 160 0, 330 -122, 510 -122"/>
-            </g>
+                path="M0 0 C 136 0, 236 -132, 370 -132"/>
+            </circle>
           </svg>
-          <span class="lockchip">已锁定</span>
         </div>
       </div>
       <div class="card-txt">
-        <h3><em>05</em>瞄准</h3>
-        <p>准心沿贝塞尔滑到框心，<span class="k">到位才亮锁定框</span>。整条链路由一个相对位移包驱动，热键一抬，下一个包就不再发出。</p>
+        <h3><em>05</em>贝塞尔曲线</h3>
+        <p>位移不直冲：起点是准心、终点是框心，两个控制点（虚线小圆）决定弧往哪边拐。曲线再按时间拆成几十个小步，<span class="k">起手快、临门减速</span>，不会一冲过头。</p>
       </div>
     </article>
 
   </div>
-</section>
+
+  </section>
 
 <section class="sec" style="padding-top:0">
   <p class="sec-h">Pipeline</p>
