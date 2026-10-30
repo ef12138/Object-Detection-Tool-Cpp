@@ -174,8 +174,9 @@ h1{margin:0;font-size:clamp(32px,5vw,56px);line-height:1.1;letter-spacing:-.028e
 .hpb{fill:rgba(100,100,100,.62)}
 .hpf{fill:#d2d2d2}
 .trail2{fill:none;stroke:url(#g2);stroke-width:2.2;stroke-linecap:round;
-  stroke-dasharray:160;stroke-dashoffset:160;animation:draw2 4.6s ease-in-out infinite}
-@keyframes draw2{0%{stroke-dashoffset:160}54%,100%{stroke-dashoffset:0}}
+  stroke-dasharray:149.3;stroke-dashoffset:149.3;
+  animation:draw2 4.6s cubic-bezier(.30,.70,.30,1) infinite}
+@keyframes draw2{0%{stroke-dashoffset:149.3}54%,100%{stroke-dashoffset:0}}
 .ch circle,.ch path{fill:none;stroke:var(--cyan);stroke-width:1.7;stroke-linecap:round}
 .ch{animation:chair 4.6s linear infinite}
 @keyframes chair{0%,55%{opacity:1}64%,92%{opacity:.2}98%,100%{opacity:1}}
@@ -230,14 +231,15 @@ h1{margin:0;font-size:clamp(32px,5vw,56px);line-height:1.1;letter-spacing:-.028e
 .aim{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:10px 14px}
 .aim svg{width:100%;height:100%;display:block}
 .trail{fill:none;stroke:url(#gr);stroke-width:2.4;stroke-linecap:round;
-  stroke-dasharray:560;stroke-dashoffset:560;animation:draw 4.8s ease-in-out infinite}
-@keyframes draw{0%{stroke-dashoffset:560}52%,76%{stroke-dashoffset:0}100%{stroke-dashoffset:0}}
+  stroke-dasharray:397.5;stroke-dashoffset:397.5;
+  animation:draw 4.8s cubic-bezier(.30,.70,.30,1) infinite}
+@keyframes draw{0%{stroke-dashoffset:397.5}62%,76%{stroke-dashoffset:0}100%{stroke-dashoffset:0}}
 .dot{fill:#7aa8ff;filter:drop-shadow(0 0 7px rgba(75,140,255,.95))}
 .handle{fill:none;stroke:var(--dim);stroke-width:1;stroke-dasharray:3 3;opacity:.55}
 .cpt{fill:var(--bg-2);stroke:var(--accent);stroke-width:1.2;opacity:.75}
 .ring{fill:none;stroke:var(--amber);stroke-width:1.6;opacity:.2;transform-box:fill-box;transform-origin:center;
   animation:ringPulse 4.8s ease-in-out infinite}
-@keyframes ringPulse{0%,38%{opacity:.05;transform:scale(.6)}50%,74%{opacity:.95;transform:scale(1)}100%{opacity:.05;transform:scale(1.3)}}
+@keyframes ringPulse{0%,58%{opacity:.05;transform:scale(.6)}64%,78%{opacity:.95;transform:scale(1)}100%{opacity:.05;transform:scale(1.22)}}
 
 /* ---------- pipeline ---------- */
 .pipe{display:flex;align-items:stretch;margin-top:6px;
