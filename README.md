@@ -2,7 +2,7 @@
 
 **抓屏幕中心的一块画面 → 跑目标检测 → 把框画回屏幕上 → 按住某个键时，把鼠标朝目标方向推一点。**
 
-抓屏走 DXGI Desktop Duplication，推理走 ONNX Runtime（DirectML），绘制是一个透明置顶的 Qt 窗口，参数全部落在 exe 同目录的 `config.ini`。整个工具是纯 C++ / Qt，编出来直接跑。
+抓屏DXGI Desktop Duplication，推理ONNX Runtime（DirectML），绘制透明置顶 Qt 窗口。
 
 **性能翻倍**：同一个模型、同一块显卡，从抓屏到推理到出框整条链路都在显存里走完，省掉 Python 解释器和 PyTorch 的调度与来回拷贝。
 
@@ -14,16 +14,16 @@
 
 ## 整体架构
 
-[![整体架构](docs/images/01-architecture.png)](docs/images/01-architecture.png)
+![整体架构](docs/images/01-architecture.png)
 
 一共有四条线路，其中后两条才是真正决定能不能用的：
 
-| 线路 | 职责 | 实现要点 |
-| --- | --- | --- |
-| UI 层 | 收发参数、启停检测 | Qt Widgets，改完参数立即落盘，不参与计算 |
+| 线路   | 职责                  | 实现要点                                                                         |
+| ---- | ------------------- | ---------------------------------------------------------------------------- |
+| UI 层 | 收发参数、启停检测           | Qt Widgets，改完参数立即落盘，不参与计算                                                    |
 | 推理循环 | 抓屏 → 预处理 → 推理 → 后处理 | DXGI 抓 D3D11 纹理 → letterbox → ONNX Runtime/DirectML → sigmoid + 阈值 + 同类别 NMS |
-| 控制层 | 把检测结果换算成鼠标位移 | 热键闸门 → 目标锚点到屏幕中心的误差 → PID → 贝塞尔拆步 → SendInput 相对位移 |
-| 叠加层 | 只画不算，独立 144 Hz 重绘 | 透明置顶窗口，带 `WDA_EXCLUDEFROMCAPTURE`，**不参与抓屏** |
+| 控制层  | 把检测结果换算成鼠标位移        | 热键闸门 → 目标锚点到屏幕中心的误差 → PID → 贝塞尔拆步 → SendInput 相对位移                           |
+| 叠加层  | 只画不算，独立 144 Hz 重绘   | 透明置顶窗口，带 `WDA_EXCLUDEFROMCAPTURE`，**不参与抓屏**                                  |
 
 叠加层这一条容易被忽略，但它是整套工具能自洽的前提：如果画在屏幕上的检测框被下一帧抓回去当输入，就会形成自反馈——框被当成画面内容喂给模型，模型在框上再出框，两秒钟就"实"成一块色块。所以叠加窗口建出来就声明自己不进任何屏幕采集，人眼看得见、抓屏看不见。同理，抓屏只对 640×640 那一小块在 GPU 内做一次纹理拷贝，不走 GDI 整屏拷贝，也就不怕自己在全屏上重绘。
 
@@ -68,12 +68,14 @@
 
 本机（i5-12400F / RTX 3060 / DirectML）实测，抓屏 640×640，频率设为 0（跑满为止），每档取 600~1400 帧的中位数：
 
-| 输入尺寸 | 单帧推理 | 整条循环帧率 |
-| --- | --- | --- |
-| 256 | 2.66 ms | 约 138 fps |
-| 320 | 4.16 ms | 约 128 fps |
-| 416 | 5.71 ms | 约 102 fps |
-| 640 | 10.86 ms | 约 66 fps |
+| 输入尺寸 | 单帧推理     | 整条循环帧率    |
+| ---- | -------- | --------- |
+| 256  | 2.66 ms  | 约 138 fps |
+| 320  | 4.16 ms  | 约 128 fps |
+| 416  | 5.71 ms  | 约 102 fps |
+| 640  | 10.86 ms | 约 66 fps  |
+
+> 表里是本机的绝对帧率，不是跟谁比出来的比值。开头那句「性能翻倍」指的是同一张模型换到纯 C++ + DirectML 上的差别：省掉了解释器调度，也省掉了每帧两次主机与显存之间的来回拷贝——这两块是固定支出，尺寸越小，占比越高。
 
 抓屏本身不到 1 ms。640 的耗时约是 256 的 3.8 倍——像素量差 6 倍，但固定开销（抓屏、显存往返、后处理）摊薄了差距。要快选 256，要准选 640。
 
@@ -91,22 +93,7 @@ cmake -G Ninja -B build -DCMAKE_BUILD_TYPE=Release
 cmake --build build
 ```
 
-CMake 的 POST_BUILD 会自动把 Qt 与 ORT 的 DLL 拷到输出目录。模型要自己准备。
-
-### 运行目录
-
-```
-efai2_1.exe
-config.ini                                  ← 改过任意参数后自动生成；也可以自己新建
-onnxruntime.dll
-onnxruntime_providers_shared.dll
-onnxruntime_providers_dml.dll
-DirectML.dll
-models/
-└─ your_model.onnx                         ← 自备，config.ini 里写相对路径
-```
-
-整套运行文件约 58 MB（exe 本体约 550 KB，其余是 Qt 与 ONNX Runtime 的运行库）；模型另算，单个 `.onnx` 约 43 MB。
+CMake 的 POST_BUILD 会自动把 Qt 与 ORT 的 DLL 拷到输出目录。
 
 ### 模型
 
@@ -153,24 +140,24 @@ Y=0.5
 Visible=true
 ```
 
-| 键 | 说明 |
-| --- | --- |
-| `theme` | `light` / `dark` / `auto`（省略即跟随系统） |
-| `Capture/Width`、`Height` | 抓屏区域，固定正方形；DPI 缩放下会自动换算成物理像素 |
-| `Inference/ModelPath` | 模型相对路径 |
-| `Inference/ConfidenceThreshold` | 置信度阈值（模型输出是 logits，程序内部先过 sigmoid） |
-| `Inference/NmsThreshold` | 同类别 NMS 的 IoU 阈值 |
-| `Inference/Frequency` | 每轮推理后额外等待的毫秒数，`0` 表示不等、跑满为止 |
-| `Inference/GpuDeviceId` | DirectML 使用的显卡序号，多显卡时用 |
-| `Hotkey/Key`、`Key2` | 两个等价热键，默认鼠标右键与侧键 1 |
-| `PID/Kp`、`Ki`、`Kd` | PID 三项，D 项按每帧误差变化率计算，动它比动 P 更敏感 |
-| `PID/Range` | 单帧最大移动像素；滑块满值 1000 等于不限幅 |
-| `Bezier/RandomFactor` | 曲线随机程度，`0` 退化成直线 |
-| `Bezier/Steps` | 一次位移拆成几步走 |
-| `Bezier/Speed` | 名字叫速度，实际是这一整段位移的总耗时（毫秒），调大反而变慢 |
-| `TargetOffset/X`、`Y` | 命中点在检测框内的相对位置，`0.5/0.5` 为正中；Y 越大越靠上 |
-| `DrawWindow/Visible` | 叠加层是否显示 |
-| `About/Url` | 关于页显示的开源地址，留空则用代码里写死的仓库地址 |
+| 键                               | 说明                                  |
+| ------------------------------- | ----------------------------------- |
+| `theme`                         | `light` / `dark` / `auto`（省略即跟随系统）  |
+| `Capture/Width`、`Height`        | 抓屏区域，固定正方形；DPI 缩放下会自动换算成物理像素        |
+| `Inference/ModelPath`           | 模型相对路径                              |
+| `Inference/ConfidenceThreshold` | 置信度阈值（模型输出是 logits，程序内部先过 sigmoid）  |
+| `Inference/NmsThreshold`        | 同类别 NMS 的 IoU 阈值                    |
+| `Inference/Frequency`           | 每轮推理后额外等待的毫秒数，`0` 表示不等、跑满为止         |
+| `Inference/GpuDeviceId`         | DirectML 使用的显卡序号，多显卡时用              |
+| `Hotkey/Key`、`Key2`             | 两个等价热键，默认鼠标右键与侧键 1                  |
+| `PID/Kp`、`Ki`、`Kd`              | PID 三项，D 项按每帧误差变化率计算，动它比动 P 更敏感     |
+| `PID/Range`                     | 单帧最大移动像素；滑块满值 1000 等于不限幅            |
+| `Bezier/RandomFactor`           | 曲线随机程度，`0` 退化成直线                    |
+| `Bezier/Steps`                  | 一次位移拆成几步走                           |
+| `Bezier/Speed`                  | 名字叫速度，实际是这一整段位移的总耗时（毫秒），调大反而变慢      |
+| `TargetOffset/X`、`Y`            | 命中点在检测框内的相对位置，`0.5/0.5` 为正中；Y 越大越靠上 |
+| `DrawWindow/Visible`            | 叠加层是否显示                             |
+| `About/Url`                     | 关于页显示的开源地址，留空则用代码里写死的仓库地址           |
 
 ## 目录结构
 
