@@ -13,6 +13,7 @@
 #include <QScrollArea>
 #include <QFrame>
 #include <QFontMetrics>
+#include <QUrl>
 #include <QLineEdit>
 #include <QRadioButton>
 #include <QButtonGroup>
@@ -567,28 +568,33 @@ QWidget* buildHomePage(Ui::ScreenCaptureWidget* ui) {
     return page;
 }
 
-// 开源地址：写死在代码里，config.ini 的 [About] Url 仍可覆盖（留空就用这里）
+// 官网地址：写死在代码里，config.ini 的 [About] Url 仍可覆盖（留空就用这里）
 QString projectUrl() {
-    return QStringLiteral("https://github.com/ef12138/Object-Detection-Tool-Cpp");
+    return QStringLiteral("https://ef12138.github.io/Object-Detection-Tool-Cpp/");
 }
 
 // 链接文字：QSS 的 color 管不到富文本里的 <a>（锚点走的是 QPalette::Link），
 // 所以颜色必须写进 HTML，换主题时重新拼一遍。
-// 显示文字去掉了 scheme 和 host（只留 owner/repo）：卡片里能用的宽度约 200px，
-// 整条 https 地址会顶出卡片右边（实测会被裁掉结尾）。
+// 显示文字去掉了 scheme：仓库类地址只留 owner/repo，其它站点只留 host，
+// 因为卡片里能用的宽度约 200px，整条 https 地址会顶出卡片右边（实测会被裁掉结尾）。
 QString aboutLinkHtml(const QString& url, const QColor& color) {
-    // 显示文字只留仓库名：卡片里可用宽度就两百来像素，整条 URL 放不下，
-    // owner/repo 也顶到边。href 仍是完整地址，点了照样能跳。
-    QString shown = url;
-    while (shown.endsWith(QLatin1Char('/'))) shown.chop(1);
-    const int slash = shown.lastIndexOf(QLatin1Char('/'));
-    if (slash >= 0) shown = shown.mid(slash + 1);
+    const QUrl parsed(url);
+    QString shown;
+    if (!parsed.host().isEmpty() && !parsed.host().endsWith(QStringLiteral("github.com"))) {
+        // 官网：github.io 这类站点的路径又长又和仓库同名，只显示域名更清楚
+        shown = parsed.host();
+    } else {
+        shown = url;
+        while (shown.endsWith(QLatin1Char('/'))) shown.chop(1);
+        const int slash = shown.lastIndexOf(QLatin1Char('/'));
+        if (slash >= 0) shown = shown.mid(slash + 1);
+    }
     return QStringLiteral("<a href=\"%1\" style=\"color:%2; font-size:12px; "
                           "text-decoration:none;\">%3</a>")
         .arg(url.toHtmlEscaped(), color.name(), shown.toHtmlEscaped());
 }
 
-// 关于页：作者 / 开源地址 / 免责声明。
+// 关于页：作者 / 官网 / 免责声明。
 // 这一页没有 .ui 控件可复用，整页现搭。没有套 QScrollArea：
 // 内容高度约 220px，最小窗口（300）放得下；而 QScrollArea 会按子控件的
 // minimumSizeHint 反向撑宽 widget，卡片右边缘会顶出页面留白（实测多 16px）。
@@ -630,7 +636,7 @@ QWidget* buildAboutPage() {
     metricFont.setPixelSize(15);
     const QFontMetrics fm(metricFont);
     const int nameW = qMax(fm.horizontalAdvance(QStringLiteral("作者")),
-                           fm.horizontalAdvance(QStringLiteral("开源地址")));
+                           fm.horizontalAdvance(QStringLiteral("官网")));
 
     auto addRow = [&](const QString& name, QWidget* value) {
         auto* row = new QWidget(card);
@@ -657,7 +663,7 @@ QWidget* buildAboutPage() {
     auto* author = new QLabel(QStringLiteral("EF"), card);
     addRow(QStringLiteral("作者"), author);
 
-    // 开源地址：默认用代码里写死的 projectUrl()，config.ini 的 [About] Url 可覆盖
+    // 官网：默认用代码里写死的 projectUrl()，config.ini 的 [About] Url 可覆盖
     const QSettings settings(configPath(), QSettings::IniFormat);
     QString url = settings.value(QStringLiteral("About/Url")).toString().trimmed();
     if (url.isEmpty()) url = projectUrl();
@@ -666,13 +672,13 @@ QWidget* buildAboutPage() {
     link->setOpenExternalLinks(true);
     link->setTextFormat(Qt::RichText);
     link->setTextInteractionFlags(Qt::TextBrowserInteraction);
-    // 12px：真实仓库地址三四十个字符，15px 会把这一行顶满甚至挤出卡片
+    // 12px：长地址会把这行顶满甚至挤出卡片，显示文字已在 aboutLinkHtml 里截短
     link->setProperty("role", "value");
     link->setProperty("href", url);
     link->setCursor(Qt::PointingHandCursor);
     link->setToolTip(url);
     link->setText(aboutLinkHtml(url, QColor(QString::fromLatin1(lightPalette().blue))));
-    addRow(QStringLiteral("开源地址"), link)->setProperty("last", true);
+    addRow(QStringLiteral("官网"), link)->setProperty("last", true);
 
     lay->addWidget(card);
     lay->addSpacing(12);
